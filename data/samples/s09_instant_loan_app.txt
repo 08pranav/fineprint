@@ -1,0 +1,12 @@
+PAISABOLT - Instant Credit Line Agreement
+
+Credit line: Rs 25,000. Each withdrawal is repayable in 62 days.
+
+a) The amount credited to your bank account is net of a platform fee of 4% of the withdrawal, along with GST.
+b) Interest is charged at 0.1% per day on the amount withdrawn.
+c) For every day of delay beyond the due date, a delay fee of Rs 50 per day is added to your dues.
+d) By signing up, you permit the PaisaBolt app to read your SMS inbox and your contact list for credit assessment and for collection purposes.
+e) Your credit line may be suspended or reduced at the absolute discretion of the Company.
+f) Any amount due may be recovered from any bank account linked to your UPI AutoPay mandate.
+g) You may repay early at any time; no fee applies for early repayment.
+h) Grievances can be raised with the Grievance Redressal Officer at the address in the app.

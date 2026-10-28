@@ -1,0 +1,242 @@
+{
+  "methods": {
+    "rules": {
+      "seconds": 0.1,
+      "dev": {
+        "precision": 1.0,
+        "recall": 1.0,
+        "f1": 1.0,
+        "tp": 47,
+        "fp": 0,
+        "fn": 0,
+        "per_category": {
+          "auto_renewal": {
+            "tp": 2,
+            "fp": 0,
+            "fn": 0
+          },
+          "bounce_charge": {
+            "tp": 3,
+            "fp": 0,
+            "fn": 0
+          },
+          "bundled_insurance": {
+            "tp": 3,
+            "fp": 0,
+            "fn": 0
+          },
+          "data_sharing": {
+            "tp": 3,
+            "fp": 0,
+            "fn": 0
+          },
+          "deferred_interest": {
+            "tp": 3,
+            "fp": 0,
+            "fn": 0
+          },
+          "floating_rate": {
+            "tp": 2,
+            "fp": 0,
+            "fn": 0
+          },
+          "insurance_exclusion": {
+            "tp": 6,
+            "fp": 0,
+            "fn": 0
+          },
+          "late_payment": {
+            "tp": 5,
+            "fp": 0,
+            "fn": 0
+          },
+          "minimum_due": {
+            "tp": 2,
+            "fp": 0,
+            "fn": 0
+          },
+          "prepayment_penalty": {
+            "tp": 4,
+            "fp": 0,
+            "fn": 0
+          },
+          "processing_fee": {
+            "tp": 7,
+            "fp": 0,
+            "fn": 0
+          },
+          "recurring_fee": {
+            "tp": 1,
+            "fp": 0,
+            "fn": 0
+          },
+          "set_off_lien": {
+            "tp": 3,
+            "fp": 0,
+            "fn": 0
+          },
+          "unilateral_change": {
+            "tp": 3,
+            "fp": 0,
+            "fn": 0
+          }
+        }
+      },
+      "test": {
+        "precision": 0.929,
+        "recall": 0.765,
+        "f1": 0.839,
+        "tp": 13,
+        "fp": 1,
+        "fn": 4,
+        "per_category": {
+          "auto_renewal": {
+            "tp": 0,
+            "fp": 0,
+            "fn": 1
+          },
+          "bundled_insurance": {
+            "tp": 1,
+            "fp": 0,
+            "fn": 0
+          },
+          "data_sharing": {
+            "tp": 2,
+            "fp": 0,
+            "fn": 0
+          },
+          "floating_rate": {
+            "tp": 1,
+            "fp": 1,
+            "fn": 0
+          },
+          "insurance_exclusion": {
+            "tp": 1,
+            "fp": 0,
+            "fn": 1
+          },
+          "late_payment": {
+            "tp": 3,
+            "fp": 0,
+            "fn": 0
+          },
+          "minimum_due": {
+            "tp": 1,
+            "fp": 0,
+            "fn": 1
+          },
+          "processing_fee": {
+            "tp": 1,
+            "fp": 0,
+            "fn": 0
+          },
+          "recurring_fee": {
+            "tp": 1,
+            "fp": 0,
+            "fn": 0
+          },
+          "set_off_lien": {
+            "tp": 1,
+            "fp": 0,
+            "fn": 1
+          },
+          "unilateral_change": {
+            "tp": 1,
+            "fp": 0,
+            "fn": 0
+          }
+        }
+      },
+      "all": {
+        "precision": 0.984,
+        "recall": 0.938,
+        "f1": 0.96,
+        "tp": 60,
+        "fp": 1,
+        "fn": 4,
+        "per_category": {
+          "auto_renewal": {
+            "tp": 2,
+            "fp": 0,
+            "fn": 1
+          },
+          "bounce_charge": {
+            "tp": 3,
+            "fp": 0,
+            "fn": 0
+          },
+          "bundled_insurance": {
+            "tp": 4,
+            "fp": 0,
+            "fn": 0
+          },
+          "data_sharing": {
+            "tp": 5,
+            "fp": 0,
+            "fn": 0
+          },
+          "deferred_interest": {
+            "tp": 3,
+            "fp": 0,
+            "fn": 0
+          },
+          "floating_rate": {
+            "tp": 3,
+            "fp": 1,
+            "fn": 0
+          },
+          "insurance_exclusion": {
+            "tp": 7,
+            "fp": 0,
+            "fn": 1
+          },
+          "late_payment": {
+            "tp": 8,
+            "fp": 0,
+            "fn": 0
+          },
+          "minimum_due": {
+            "tp": 3,
+            "fp": 0,
+            "fn": 1
+          },
+          "prepayment_penalty": {
+            "tp": 4,
+            "fp": 0,
+            "fn": 0
+          },
+          "processing_fee": {
+            "tp": 8,
+            "fp": 0,
+            "fn": 0
+          },
+          "recurring_fee": {
+            "tp": 2,
+            "fp": 0,
+            "fn": 0
+          },
+          "set_off_lien": {
+            "tp": 4,
+            "fp": 0,
+            "fn": 1
+          },
+          "unilateral_change": {
+            "tp": 4,
+            "fp": 0,
+            "fn": 0
+          }
+        }
+      }
+    }
+  },
+  "context_accuracy": {
+    "right": 21,
+    "total": 23
+  },
+  "documents": 12,
+  "labels": 64,
+  "readability": {
+    "simple": 88.7,
+    "expert": 68.2
+  }
+}

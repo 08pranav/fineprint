@@ -1,0 +1,25 @@
+KONKAN HOUSING FINANCE LTD
+Home Loan Agreement - Schedule of Terms
+
+Borrower: Meera Kulkarni, Aadhaar 4821 6630 1295
+Email: meera.k@example.com
+
+Loan Details
+1. Sanctioned Amount: Rs. 45,00,000
+2. Rate of Interest: 8.75% per annum, floating, linked to the RBI repo rate plus a spread of 2.25%.
+3. The rate of interest will be reset quarterly whenever the external benchmark changes. On any increase, the Lender may increase the tenure or the EMI, at the Lender's option.
+4. Tenure: 240 months
+5. Processing fee: 0.5% of the loan amount, maximum Rs. 10,000, plus GST.
+
+Prepayment
+6. No foreclosure or part-payment charges will be levied on floating rate home loans to individual borrowers.
+
+Repayment and Default
+7. Penal charges of Rs. 1,000 per month will apply on any EMI that remains unpaid after the due date. Penal charges will not be added to the principal and no interest will be charged on them.
+8. The Home Loan Protection Plan premium shall be financed by the Lender and shall form part of the loan amount.
+9. Any default under this loan or under any other loan of the Borrower with the Lender shall be treated as a cross-default, and the Lender may recall all such loans.
+
+Property
+10. The Borrower shall keep the property insured against fire and natural calamities for its full value.
+11. Original title deeds will be returned within 30 days of full repayment.
+12. Conversion to a lower rate of interest is permitted on payment of a conversion fee of 0.5% of the outstanding principal.

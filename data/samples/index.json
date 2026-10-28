@@ -1,0 +1,14 @@
+[
+  {"id": "s01", "file": "s01_personal_loan.txt", "title": "Personal loan sanction letter", "doc_type": "loan", "description": "₹3 lakh, 16% fixed, 36 months. Fees, foreclosure, insurance and set-off."},
+  {"id": "s02", "file": "s02_home_loan.txt", "title": "Home loan agreement", "doc_type": "loan", "description": "₹45 lakh floating-rate loan linked to the repo rate."},
+  {"id": "s03", "file": "s03_credit_card.txt", "title": "Credit card terms", "doc_type": "credit_card", "description": "Annual fee, 3.75% a month finance charges, minimum amount due."},
+  {"id": "s04", "file": "s04_no_cost_emi.txt", "title": "'No cost EMI' phone offer", "doc_type": "bnpl", "description": "₹60,000 phone on a 6-month plan that is not always free."},
+  {"id": "s05", "file": "s05_health_insurance.txt", "title": "Family health insurance", "doc_type": "insurance", "description": "Waiting periods, co-payment, room-rent limit, auto-renewal."},
+  {"id": "s06", "file": "s06_gym_subscription.txt", "title": "Gym membership", "doc_type": "subscription", "description": "Monthly auto-renewal, joining fee, prices can change."},
+  {"id": "s07", "file": "s07_gold_loan.txt", "title": "Gold loan pledge form", "doc_type": "loan", "description": "Interest jumps backdated if 90 days are missed."},
+  {"id": "s08", "file": "s08_car_loan.txt", "title": "Car loan key terms", "doc_type": "loan", "description": "Foreclosure up to 6%, insurance added to the loan."},
+  {"id": "s09", "file": "s09_instant_loan_app.txt", "title": "Instant loan app", "doc_type": "loan", "description": "Platform fee, daily delay fee, reads SMS and contacts."},
+  {"id": "s10", "file": "s10_education_loan.txt", "title": "Education loan sanction", "doc_type": "loan", "description": "Floating EBLR rate and mandatory life cover."},
+  {"id": "s11", "file": "s11_credit_card_2.txt", "title": "Premium credit card charges", "doc_type": "credit_card", "description": "Lost interest-free period, minimum due, set-off on deposits."},
+  {"id": "s12", "file": "s12_accident_cover.txt", "title": "Personal accident cover", "doc_type": "insurance", "description": "Renews by e-mandate, 90-day exclusion, deductible."}
+]

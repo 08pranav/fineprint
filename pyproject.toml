@@ -1,0 +1,13 @@
+[project]
+name = "fineprint"
+version = "1.0.0"
+description = "Reads the fine print in Indian loan, credit card, EMI and insurance documents and shows the risks in rupees."
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src", "tests"]
+
+[tool.ruff]
+line-length = 140
+src = ["src"]

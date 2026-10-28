@@ -1,0 +1,117 @@
+{
+  "about": "Gold risk labels for the sample documents. Each label names a category and an 'anchor': a short exact substring that identifies the clause. A predicted flag matches a label when it has the same category and its clause contains the anchor. Split 'dev' was used while writing the rules; 'test' was written afterwards in different wording and not used for tuning.",
+  "documents": [
+    {"id": "s01", "file": "s01_personal_loan.txt", "split": "dev",
+     "context": {"principal": 300000, "annual_rate": 16, "tenure_months": 36},
+     "labels": [
+      {"category": "processing_fee", "anchor": "Processing fee of 3% of the loan amount"},
+      {"category": "prepayment_penalty", "anchor": "Foreclosure charges: 5% of the principal"},
+      {"category": "prepayment_penalty", "anchor": "Part-payment charges of 2%"},
+      {"category": "late_payment", "anchor": "shall attract penal charges of 2% per month"},
+      {"category": "bounce_charge", "anchor": "a bounce charge of ₹500"},
+      {"category": "bundled_insurance", "anchor": "credit shield insurance premium of ₹6,499"},
+      {"category": "unilateral_change", "anchor": "reserves the right to revise any charges"},
+      {"category": "set_off_lien", "anchor": "right of set-off and lien"},
+      {"category": "data_sharing", "anchor": "share the Borrower's information with its group companies"}
+    ]},
+    {"id": "s02", "file": "s02_home_loan.txt", "split": "dev",
+     "context": {"principal": 4500000, "annual_rate": 8.75, "tenure_months": 240},
+     "labels": [
+      {"category": "floating_rate", "anchor": "floating, linked to the RBI repo rate"},
+      {"category": "floating_rate", "anchor": "will be reset quarterly"},
+      {"category": "processing_fee", "anchor": "Processing fee: 0.5% of the loan amount"},
+      {"category": "late_payment", "anchor": "Penal charges of Rs. 1,000 per month"},
+      {"category": "bundled_insurance", "anchor": "Home Loan Protection Plan premium"},
+      {"category": "set_off_lien", "anchor": "treated as a cross-default"}
+    ]},
+    {"id": "s03", "file": "s03_credit_card.txt", "split": "dev",
+     "context": {"principal": 150000, "annual_rate": 45, "tenure_months": null},
+     "labels": [
+      {"category": "processing_fee", "anchor": "Joining fee: ₹1,000"},
+      {"category": "recurring_fee", "anchor": "Annual fee: ₹1,000 plus GST"},
+      {"category": "minimum_due", "anchor": "Finance charges of 3.75% per month"},
+      {"category": "minimum_due", "anchor": "The Minimum Amount Due is 5%"},
+      {"category": "late_payment", "anchor": "Late payment charges: Nil if"},
+      {"category": "unilateral_change", "anchor": "may reduce the credit limit or cash limit at any time without prior notice"}
+    ]},
+    {"id": "s04", "file": "s04_no_cost_emi.txt", "split": "dev",
+     "context": {"principal": 60000, "annual_rate": null, "tenure_months": 6},
+     "labels": [
+      {"category": "deferred_interest", "anchor": "This is a No Cost EMI offer"},
+      {"category": "processing_fee", "anchor": "A processing fee of ₹199"},
+      {"category": "deferred_interest", "anchor": "the No Cost benefit will be withdrawn"},
+      {"category": "late_payment", "anchor": "A late fee of ₹450"},
+      {"category": "bounce_charge", "anchor": "a return charge of ₹350"},
+      {"category": "data_sharing", "anchor": "may access your contacts, SMS and location"}
+    ]},
+    {"id": "s05", "file": "s05_health_insurance.txt", "split": "dev",
+     "context": {"principal": 500000, "annual_rate": null, "tenure_months": null},
+     "labels": [
+      {"category": "insurance_exclusion", "anchor": "Initial waiting period"},
+      {"category": "insurance_exclusion", "anchor": "Pre-existing diseases are covered only after"},
+      {"category": "insurance_exclusion", "anchor": "Specified illnesses such as cataract"},
+      {"category": "insurance_exclusion", "anchor": "A co-payment of 20%"},
+      {"category": "insurance_exclusion", "anchor": "Room rent is limited to 1%"},
+      {"category": "insurance_exclusion", "anchor": "permanently excluded"},
+      {"category": "auto_renewal", "anchor": "will be renewed automatically every year"}
+    ]},
+    {"id": "s06", "file": "s06_gym_subscription.txt", "split": "dev",
+     "context": {"principal": null, "annual_rate": null, "tenure_months": null},
+     "labels": [
+      {"category": "auto_renewal", "anchor": "renews automatically every month at ₹649"},
+      {"category": "processing_fee", "anchor": "one-time joining fee of ₹999"},
+      {"category": "unilateral_change", "anchor": "may change membership prices and these terms at any time without prior notice"},
+      {"category": "data_sharing", "anchor": "share your profile and activity data with our partners"}
+    ]},
+    {"id": "s07", "file": "s07_gold_loan.txt", "split": "dev",
+     "context": {"principal": 120000, "annual_rate": 18, "tenure_months": 12},
+     "labels": [
+      {"category": "deferred_interest", "anchor": "interest will be charged at 24% per annum from the date of disbursal"},
+      {"category": "processing_fee", "anchor": "A processing fee of ₹500"},
+      {"category": "prepayment_penalty", "anchor": "interest for a minimum of 7 days"},
+      {"category": "set_off_lien", "anchor": "general lien on all ornaments"}
+    ]},
+    {"id": "s08", "file": "s08_car_loan.txt", "split": "dev",
+     "context": {"principal": 650000, "annual_rate": 9.5, "tenure_months": 60},
+     "labels": [
+      {"category": "prepayment_penalty", "anchor": "Foreclosure charges are 6%"},
+      {"category": "bundled_insurance", "anchor": "Vehicle insurance must be bought through the Lender's nominated insurer"},
+      {"category": "processing_fee", "anchor": "Documentation charges of Rs. 2,500"},
+      {"category": "bounce_charge", "anchor": "If the NACH mandate is dishonoured"},
+      {"category": "late_payment", "anchor": "Overdue EMIs will attract penal charges at 24%"}
+    ]},
+    {"id": "s09", "file": "s09_instant_loan_app.txt", "split": "test",
+     "context": {"principal": 25000, "annual_rate": null, "tenure_months": null},
+     "labels": [
+      {"category": "processing_fee", "anchor": "net of a platform fee of 4%"},
+      {"category": "late_payment", "anchor": "delay fee of Rs 50 per day"},
+      {"category": "data_sharing", "anchor": "read your SMS inbox and your contact list"},
+      {"category": "unilateral_change", "anchor": "suspended or reduced at the absolute discretion"},
+      {"category": "set_off_lien", "anchor": "recovered from any bank account linked"}
+    ]},
+    {"id": "s10", "file": "s10_education_loan.txt", "split": "test",
+     "context": {"principal": 1200000, "annual_rate": 11.75, "tenure_months": 84},
+     "labels": [
+      {"category": "floating_rate", "anchor": "will be revised as and when the EBLR changes"},
+      {"category": "bundled_insurance", "anchor": "Loan protection life cover for the student is mandatory"},
+      {"category": "late_payment", "anchor": "Overdue instalments will attract additional interest"}
+    ]},
+    {"id": "s11", "file": "s11_credit_card_2.txt", "split": "test",
+     "context": {"principal": 200000, "annual_rate": null, "tenure_months": null},
+     "labels": [
+      {"category": "recurring_fee", "anchor": "Annual Membership Fee: Rs. 2,500"},
+      {"category": "minimum_due", "anchor": "interest-free period of up to 50 days is not available"},
+      {"category": "minimum_due", "anchor": "Paying just the Minimum Amount Due"},
+      {"category": "late_payment", "anchor": "Late Payment Fee: Rs. 1,200"},
+      {"category": "data_sharing", "anchor": "share card member data with its co-brand partner"},
+      {"category": "set_off_lien", "anchor": "entitled to set off any outstanding"}
+    ]},
+    {"id": "s12", "file": "s12_accident_cover.txt", "split": "test",
+     "context": {"principal": 1000000, "annual_rate": null, "tenure_months": null},
+     "labels": [
+      {"category": "auto_renewal", "anchor": "renews each year on the policy anniversary"},
+      {"category": "insurance_exclusion", "anchor": "shall not be admissible"},
+      {"category": "insurance_exclusion", "anchor": "A deductible of Rs. 5,000"}
+    ]}
+  ]
+}

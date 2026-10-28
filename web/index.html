@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>FinePrint · Read the fine print before you sign</title>
+  <meta name="description" content="FinePrint reads loan, credit card, EMI and insurance terms and shows which clauses can cost you money, in rupees.">
+  <meta name="color-scheme" content="light dark">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Devanagari:wght@400;600&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%230B6E69'/%3E%3Cpath d='M10 8h12M10 14h12M10 20h7' stroke='white' stroke-width='2.5' stroke-linecap='round'/%3E%3C/svg%3E">
+</head>
+<body>
+  <!-- One icon set, one stroke weight, used everywhere. -->
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false">
+    <defs>
+      <symbol id="i-high" viewBox="0 0 24 24"><path d="M10.3 3.9 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.9a2 2 0 0 0-3.4 0z"/><path d="M12 9v4M12 17h.01"/></symbol>
+      <symbol id="i-medium" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M12 7.5v5.5M12 16.5h.01"/></symbol>
+      <symbol id="i-low" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5M12 7.5h.01"/></symbol>
+      <symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10.5" width="15" height="10" rx="2"/><path d="M8 10.5V7a4 4 0 0 1 8 0v3.5"/></symbol>
+      <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 15V4M7.5 8.5 12 4l4.5 4.5M4.5 15v3.5a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V15"/></symbol>
+      <symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M9 13h6M9 17h6"/></symbol>
+      <symbol id="i-back" viewBox="0 0 24 24"><path d="M19 12H5M11 18l-6-6 6-6"/></symbol>
+      <symbol id="i-check" viewBox="0 0 24 24"><path d="m5 12.5 4.5 4.5L19 7.5"/></symbol>
+      <symbol id="i-x" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></symbol>
+      <symbol id="i-send" viewBox="0 0 24 24"><path d="M5 12h13M13 6l6 6-6 6"/></symbol>
+      <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 4v11M7.5 10.5 12 15l4.5-4.5M4.5 15v3.5a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V15"/></symbol>
+      <symbol id="i-external" viewBox="0 0 24 24"><path d="M14 4h6v6M20 4l-9 9M18 14v4a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4"/></symbol>
+      <symbol id="i-info" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M12 11v5.5M12 7.5h.01"/></symbol>
+      <symbol id="i-error" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9.5"/><path d="M15 9l-6 6M9 9l6 6"/></symbol>
+      <symbol id="i-chat" viewBox="0 0 24 24"><path d="M20 15a2 2 0 0 1-2 2H8l-4 4V6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2z"/></symbol>
+    </defs>
+  </svg>
+
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap header-row">
+      <a class="brand" href="#add" data-nav="add">FinePrint</a>
+      <p class="tagline">Reads the fine print in loan, card, EMI and insurance terms.</p>
+      <p class="mode" id="mode" role="status">Checking…</p>
+    </div>
+    <nav class="wrap steps" aria-label="Progress">
+      <ol>
+        <li><button type="button" class="step" data-step="add" aria-current="step"><span class="step-num">1</span><span>Add<span class="long"> document</span></span></button></li>
+        <li><button type="button" class="step" data-step="review" disabled><span class="step-num">2</span><span>Review<span class="long"> risks</span></span></button></li>
+        <li><button type="button" class="step" data-step="ask" disabled><span class="step-num">3</span><span>Ask<span class="long"> questions</span></span></button></li>
+      </ol>
+    </nav>
+  </header>
+
+  <main id="main" class="wrap" tabindex="-1">
+
+    <!-- STEP 1 · ADD DOCUMENT ---------------------------------------------------------------------- -->
+    <section id="view-add" class="view" aria-labelledby="h-add">
+      <p class="step-of">Step 1 of 3</p>
+      <h1 id="h-add" tabindex="-1">Add your document</h1>
+      <p class="lede">Paste the terms, upload the PDF, or try one of the samples. FinePrint shows which clauses can cost you money, and how much.</p>
+
+      <div class="notice notice-info" id="undo-notice" hidden>
+        <svg class="icon" aria-hidden="true"><use href="#i-info"/></svg>
+        <p>The previous document was cleared.</p>
+        <button type="button" class="btn btn-text" id="undo-btn">Undo</button>
+      </div>
+
+      <fieldset class="source-choice">
+        <legend>How do you want to add it?</legend>
+        <div class="segmented" role="radiogroup" aria-label="Document source">
+          <label class="seg"><input type="radio" name="source" value="paste" checked><span>Paste text</span></label>
+          <label class="seg"><input type="radio" name="source" value="upload"><span>Upload a file</span></label>
+          <label class="seg"><input type="radio" name="source" value="sample"><span>Try a sample</span></label>
+        </div>
+      </fieldset>
+
+      <div class="source-panel" id="panel-paste">
+        <label class="field-label" for="doc-text">Document text</label>
+        <p class="hint" id="doc-text-hint">Include the fees and charges section. At least 120 characters.</p>
+        <textarea id="doc-text" rows="12" aria-describedby="doc-text-hint doc-text-count doc-text-error" spellcheck="false"
+          placeholder="For example: 6. Foreclosure charges: 5% of the principal outstanding plus GST…"></textarea>
+        <div class="field-meta">
+          <p class="count" id="doc-text-count" aria-live="polite">0 characters</p>
+          <button type="button" class="btn btn-text" id="clear-text" hidden>Clear text</button>
+        </div>
+        <p class="field-error" id="doc-text-error" hidden></p>
+      </div>
+
+      <div class="source-panel" id="panel-upload" hidden>
+        <p class="field-label" id="file-label">File</p>
+        <label class="drop" id="drop" for="file-input">
+          <input type="file" id="file-input" class="sr-only" accept=".pdf,.txt,application/pdf,text/plain" aria-describedby="file-hint file-error">
+          <svg class="icon icon-lg" aria-hidden="true"><use href="#i-upload"/></svg>
+          <span class="drop-main">Choose a PDF or text file</span>
+          <span class="drop-sub" id="file-hint">or drag it here · PDF or .txt · up to 5 MB</span>
+        </label>
+        <div class="file-chosen" id="file-chosen" hidden>
+          <svg class="icon" aria-hidden="true"><use href="#i-file"/></svg>
+          <p><span id="file-name"></span> <span class="muted" id="file-size"></span></p>
+          <button type="button" class="btn btn-text" id="file-remove">Remove file</button>
+        </div>
+        <p class="hint">Scanned PDFs (photos of pages) have no readable text. For those, copy the text and paste it instead.</p>
+        <p class="field-error" id="file-error" hidden></p>
+      </div>
+
+      <div class="source-panel" id="panel-sample" hidden>
+        <fieldset>
+          <legend class="field-label">Pick a sample document</legend>
+          <p class="hint">These are made-up documents written to look like real Indian terms.</p>
+          <div class="sample-list" id="sample-list" role="radiogroup" aria-describedby="sample-error">
+            <p class="muted">Loading samples…</p>
+          </div>
+          <p class="field-error" id="sample-error" hidden></p>
+        </fieldset>
+      </div>
+
+      <p class="privacy">
+        <svg class="icon" aria-hidden="true"><use href="#i-lock"/></svg>
+        <span>Names, PAN, Aadhaar, card, account and phone numbers and emails are hidden before analysis. Nothing is stored.</span>
+      </p>
+
+      <div class="action-bar">
+        <button type="button" class="btn btn-primary" id="analyse-btn">Analyse document</button>
+        <button type="button" class="btn btn-secondary" id="cancel-btn" hidden>Cancel</button>
+      </div>
+      <div class="progress" id="analyse-status" role="status" aria-live="polite" hidden>
+        <span class="spinner" aria-hidden="true"></span>
+        <span id="analyse-status-text"></span>
+      </div>
+      <div class="notice notice-error" id="analyse-error" role="alert" hidden>
+        <svg class="icon" aria-hidden="true"><use href="#i-error"/></svg>
+        <p id="analyse-error-text"></p>
+      </div>
+    </section>
+
+    <!-- STEP 2 · REVIEW RISKS ---------------------------------------------------------------------- -->
+    <section id="view-review" class="view" aria-labelledby="h-review" hidden>
+      <a class="back" href="#add" data-nav="add"><svg class="icon" aria-hidden="true"><use href="#i-back"/></svg>Change document</a>
+      <p class="step-of">Step 2 of 3</p>
+      <h1 id="h-review" tabindex="-1">Review risks</h1>
+      <p class="lede" id="review-meta"></p>
+      <p class="disclaimer-inline">This explains the document. It is not financial advice.</p>
+
+      <div id="review-warnings"></div>
+
+      <div class="review-layout">
+        <div class="review-main">
+          <div class="toolbar">
+            <fieldset class="filter">
+              <legend>Show</legend>
+              <div class="chips" id="filters"></div>
+            </fieldset>
+            <div class="toolbar-group">
+              <fieldset class="level">
+                <legend>Explain at</legend>
+                <div class="segmented segmented-sm" role="radiogroup" aria-label="Explanation level">
+                  <label class="seg"><input type="radio" name="level" value="simple"><span>Simple</span></label>
+                  <label class="seg"><input type="radio" name="level" value="standard" checked><span>Standard</span></label>
+                  <label class="seg"><input type="radio" name="level" value="expert"><span>Expert</span></label>
+                </div>
+              </fieldset>
+              <div class="lang">
+                <label class="legend-like" for="language">Language</label>
+                <select id="language" aria-describedby="language-note">
+                  <option value="en">English</option>
+                  <option value="hi">हिन्दी (Hindi)</option>
+                  <option value="mr">मराठी (Marathi)</option>
+                  <option value="hinglish">Hinglish</option>
+                </select>
+              </div>
+            </div>
+            <a class="btn btn-text numbers-jump" href="#numbers" id="numbers-jump">Change the numbers used for rupee figures</a>
+            <p class="hint" id="language-note" hidden>Hindi, Marathi and Hinglish need the language model, which is not set up on this server.</p>
+          </div>
+
+          <div class="progress" id="explain-status" role="status" aria-live="polite" hidden>
+            <span class="spinner" aria-hidden="true"></span><span id="explain-status-text">Rewriting explanations…</span>
+          </div>
+
+          <ol class="flags" id="flags" aria-live="off"></ol>
+
+          <details class="full-doc" id="full-doc">
+            <summary>Read the whole document <span class="muted" id="full-doc-count"></span></summary>
+            <ol class="clauses" id="clauses"></ol>
+          </details>
+        </div>
+
+        <aside class="review-side" aria-labelledby="h-numbers">
+          <form class="numbers" id="numbers" novalidate>
+            <h2 id="h-numbers">Your numbers</h2>
+            <p class="hint">Rupee figures use these. We filled them from the document; change them to match your case.</p>
+            <div class="num-field">
+              <label for="n-principal"><span id="principal-name">Amount</span> <span class="unit">₹</span></label>
+              <input id="n-principal" name="principal" type="number" inputmode="decimal" min="0" max="1000000000" step="any" aria-describedby="s-principal e-principal">
+              <p class="source-tag" id="s-principal"></p>
+              <p class="field-error" id="e-principal" hidden></p>
+            </div>
+            <div class="num-field">
+              <label for="n-rate">Interest rate <span class="unit">% a year</span></label>
+              <input id="n-rate" name="annual_rate" type="number" inputmode="decimal" min="0" max="100" step="any" aria-describedby="s-rate e-rate">
+              <p class="source-tag" id="s-rate"></p>
+              <p class="field-error" id="e-rate" hidden></p>
+            </div>
+            <div class="num-field">
+              <label for="n-tenure">Tenure <span class="unit">months</span></label>
+              <input id="n-tenure" name="tenure_months" type="number" inputmode="numeric" min="1" max="480" step="1" aria-describedby="s-tenure e-tenure">
+              <p class="source-tag" id="s-tenure"></p>
+              <p class="field-error" id="e-tenure" hidden></p>
+            </div>
+            <div class="num-field">
+              <label for="n-emi">EMI <span class="unit">₹, optional</span></label>
+              <input id="n-emi" name="emi" type="number" inputmode="decimal" min="0" max="100000000" step="any" aria-describedby="s-emi e-emi">
+              <p class="source-tag" id="s-emi"></p>
+              <p class="field-error" id="e-emi" hidden></p>
+            </div>
+            <p class="numbers-status" id="numbers-status" role="status" aria-live="polite"></p>
+            <button type="button" class="btn btn-text" id="numbers-reset">Use the document's numbers</button>
+          </form>
+        </aside>
+      </div>
+
+      <div class="action-bar action-bar-review">
+        <button type="button" class="btn btn-primary" data-nav="ask"><svg class="icon" aria-hidden="true"><use href="#i-chat"/></svg>Ask about this document</button>
+        <button type="button" class="btn btn-secondary" id="download-btn"><svg class="icon" aria-hidden="true"><use href="#i-download"/></svg>Download report</button>
+        <span class="spacer"></span>
+        <button type="button" class="btn btn-text btn-quiet" id="start-over">Start over with a new document</button>
+      </div>
+      <p class="numbers-status" id="download-status" role="status" aria-live="polite"></p>
+    </section>
+
+    <!-- STEP 3 · ASK ------------------------------------------------------------------------------- -->
+    <section id="view-ask" class="view" aria-labelledby="h-ask" hidden>
+      <a class="back" href="#review" data-nav="review"><svg class="icon" aria-hidden="true"><use href="#i-back"/></svg>Back to risks</a>
+      <p class="step-of">Step 3 of 3</p>
+      <h1 id="h-ask" tabindex="-1">Ask about this document</h1>
+      <p class="lede">Ask in English, Hindi, Marathi or Hinglish. Answers quote the clause they come from.</p>
+
+      <ol class="chat" id="chat" role="log" aria-live="polite" aria-label="Questions and answers"></ol>
+
+      <div class="suggestions" id="suggestions-wrap">
+        <p class="field-label" id="sugg-label">Try asking</p>
+        <div class="chips" id="suggestions" role="group" aria-labelledby="sugg-label"></div>
+      </div>
+
+      <form class="ask-form" id="ask-form" novalidate>
+        <label class="field-label" for="question">Your question</label>
+        <div class="ask-row">
+          <textarea id="question" rows="2" maxlength="500" aria-describedby="question-hint question-error"
+            placeholder="mera EMI bounce hua toh kitna lagega?"></textarea>
+          <button type="submit" class="btn btn-primary" id="ask-btn"><svg class="icon" aria-hidden="true"><use href="#i-send"/></svg>Ask</button>
+        </div>
+        <p class="hint" id="question-hint">Press Enter to ask, Shift + Enter for a new line.</p>
+        <p class="field-error" id="question-error" hidden></p>
+      </form>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <p>FinePrint explains documents. It is not financial advice. Confirm important terms with the lender in writing.</p>
+      <p>Unresolved complaint with a bank or NBFC after 30 days? <a href="https://cms.rbi.org.in" target="_blank" rel="noopener">RBI Ombudsman<span class="sr-only"> (opens in a new tab)</span><svg class="icon icon-xs" aria-hidden="true"><use href="#i-external"/></svg></a></p>
+    </div>
+  </footer>
+
+  <script src="/static/app.js" defer></script>
+</body>
+</html>

@@ -1,0 +1,122 @@
+[
+  {
+    "id": "K1",
+    "title": "Key Facts Statement: charges must be disclosed upfront",
+    "categories": ["processing_fee", "late_payment", "bounce_charge", "bundled_insurance", "unilateral_change", "recurring_fee"],
+    "body": "For retail and MSME term loans sanctioned on or after 1 October 2024, RBI requires lenders to give a Key Facts Statement (KFS) with the Annual Percentage Rate (APR), which includes interest and all other charges. Any fee or charge not listed in the KFS cannot be charged during the loan without your explicit consent. Third-party charges collected by the lender, such as insurance, count towards the APR. Credit cards are not covered by this rule.",
+    "source_name": "RBI circular on Key Facts Statement for Loans & Advances, 15 April 2024",
+    "source_url": "https://rbi.org.in/Scripts/NotificationUser.aspx?Id=12663"
+  },
+  {
+    "id": "K2",
+    "title": "Prepayment charges on floating-rate loans",
+    "categories": ["prepayment_penalty", "floating_rate"],
+    "body": "Under RBI's Pre-payment Charges on Loans Directions, 2025, loans sanctioned or renewed from 1 January 2026 cannot carry pre-payment charges when they are floating-rate loans taken by individuals for non-business purposes. Business loans to individuals and micro and small enterprises are also covered for most lenders. Lenders must state in the sanction letter, agreement and KFS whether pre-payment charges apply, and cannot add undisclosed charges at the time of pre-payment. Fixed-rate loans can still carry a disclosed charge.",
+    "source_name": "RBI (Pre-payment Charges on Loans) Directions, 2025",
+    "source_url": "https://www.rbi.org.in/Scripts/NotificationUser.aspx?Id=12878"
+  },
+  {
+    "id": "K3",
+    "title": "Penal charges for late payment",
+    "categories": ["late_payment", "bounce_charge"],
+    "body": "RBI's fair lending rules on penal charges (August 2023) say a penalty for missed payments must be a penal charge, not extra penal interest added to the interest rate. Penal charges must not be capitalised, so no further interest is charged on them, and they should be reasonable and disclosed in the loan agreement and KFS.",
+    "source_name": "RBI circular on Fair Lending Practice - Penal Charges in Loan Accounts, 18 August 2023",
+    "source_url": "https://rbi.org.in/Scripts/NotificationUser.aspx?Id=12527"
+  },
+  {
+    "id": "K4",
+    "title": "Floating rates and how they move",
+    "categories": ["floating_rate"],
+    "body": "A floating-rate loan is linked to a benchmark such as the RBI repo rate or the lender's MCLR, plus a spread. When the benchmark rises, the lender either raises the EMI or extends the tenure. Extending the tenure keeps the EMI the same but can add a large amount of total interest. Ask which one the lender will do, and how often the rate resets.",
+    "source_name": "General explanation (FinePrint)",
+    "source_url": "https://www.rbi.org.in"
+  },
+  {
+    "id": "K5",
+    "title": "Processing fees are paid even though you never see the money",
+    "categories": ["processing_fee"],
+    "body": "A processing fee is usually deducted from the loan before it reaches your account, and it is often non-refundable even if you cancel. You still repay the full sanctioned amount with interest. That is why the APR in the KFS is higher than the headline interest rate. Compare loans on APR, not on the interest rate alone.",
+    "source_name": "General explanation (FinePrint)",
+    "source_url": "https://rbi.org.in/Scripts/NotificationUser.aspx?Id=12663"
+  },
+  {
+    "id": "K6",
+    "title": "'No-cost EMI' offers",
+    "categories": ["deferred_interest"],
+    "body": "In many no-cost EMI offers, the interest is still charged by the lender, and the seller gives an equal discount upfront so the total looks unchanged. If the discount is not applied, or a processing fee and GST on interest are added, the purchase costs more than the sticker price. Some pay-later plans also charge interest from the purchase date on the full amount if a single instalment is missed.",
+    "source_name": "General explanation (FinePrint)",
+    "source_url": "https://www.rbi.org.in"
+  },
+  {
+    "id": "K7",
+    "title": "Insurance sold with a loan",
+    "categories": ["bundled_insurance"],
+    "body": "A lender can offer insurance with a loan, but you can usually ask whether it is optional and compare the price elsewhere. If the premium is added to the loan, you also pay interest on it. Third-party charges like insurance must appear in the KFS and are included in the APR.",
+    "source_name": "General explanation, based on the RBI KFS circular",
+    "source_url": "https://rbi.org.in/Scripts/NotificationUser.aspx?Id=12663"
+  },
+  {
+    "id": "K8",
+    "title": "Health insurance waiting periods and free-look",
+    "categories": ["insurance_exclusion", "auto_renewal"],
+    "body": "IRDAI's 2024 master circular on health insurance capped the waiting period for pre-existing diseases at 36 months and specific-disease waiting periods at 36 months. After 60 continuous months of cover (the moratorium), a claim generally cannot be refused for non-disclosure, except in proven fraud. New policies have a 30-day free-look period in which you can cancel and get a refund, minus small deductions.",
+    "source_name": "IRDAI Master Circular on Health Insurance Business, 29 May 2024",
+    "source_url": "https://irdai.gov.in"
+  },
+  {
+    "id": "K9",
+    "title": "Co-payment and sub-limits",
+    "categories": ["insurance_exclusion"],
+    "body": "A co-payment means you pay a fixed share of every claim yourself. A sub-limit caps what the insurer pays for one item, such as room rent per day. Choosing a room above the limit can reduce the payout on the whole bill, not just the room, because many hospital charges are linked to the room category.",
+    "source_name": "General explanation (FinePrint)",
+    "source_url": "https://irdai.gov.in"
+  },
+  {
+    "id": "K10",
+    "title": "Credit cards: minimum amount due",
+    "categories": ["minimum_due", "late_payment", "recurring_fee"],
+    "body": "Paying only the minimum amount due avoids the late fee, but interest is charged on the whole outstanding balance, usually from the date of each purchase, at rates that can exceed 40% a year. RBI's credit card rules require card issuers to set the minimum due so that it does not lead to negative amortisation, and to close a card within 7 working days of a request once dues are paid.",
+    "source_name": "RBI Master Direction on Credit Card and Debit Card, 2022",
+    "source_url": "https://www.rbi.org.in"
+  },
+  {
+    "id": "K11",
+    "title": "Set-off and lien",
+    "categories": ["set_off_lien"],
+    "body": "A right of set-off or lien lets a bank use money in your other accounts or deposits with it to clear an unpaid loan. Read whether it applies to all accounts, and whether you are told before it is used. Keeping your salary account at a different bank from your loan reduces this risk.",
+    "source_name": "General explanation (FinePrint)",
+    "source_url": "https://www.rbi.org.in"
+  },
+  {
+    "id": "K12",
+    "title": "Digital lending apps and your data",
+    "categories": ["data_sharing"],
+    "body": "RBI's digital lending rules require apps to collect only the data they need, with your explicit consent, and not to access phone resources such as contacts, files and media, or call logs. You can refuse consent for data use that is not needed for the loan and can ask for your data to be deleted.",
+    "source_name": "RBI Guidelines on Digital Lending, 2022",
+    "source_url": "https://www.rbi.org.in"
+  },
+  {
+    "id": "K13",
+    "title": "Terms changed after you sign",
+    "categories": ["unilateral_change", "recurring_fee"],
+    "body": "Clauses that let a lender change fees or terms at its sole discretion are common, but RBI's fair practices code expects lenders to give notice of changes in terms and charges, and charges not in the KFS need your explicit consent. Ask how much notice you will get and whether you can exit without a charge if terms change. Keep a copy of the version you signed.",
+    "source_name": "General explanation, based on the RBI KFS circular",
+    "source_url": "https://rbi.org.in/Scripts/NotificationUser.aspx?Id=12663"
+  },
+  {
+    "id": "K14",
+    "title": "Where to complain",
+    "categories": [],
+    "body": "If a bank, NBFC or payment company does not resolve your complaint within 30 days, you can complain free of charge to the RBI Ombudsman through the Complaint Management System at cms.rbi.org.in. Insurance complaints go to the insurer's grievance officer first, then to the Insurance Ombudsman.",
+    "source_name": "RBI Integrated Ombudsman Scheme, 2021",
+    "source_url": "https://cms.rbi.org.in"
+  },
+  {
+    "id": "K15",
+    "title": "Auto-renewal and recurring payments",
+    "categories": ["auto_renewal", "recurring_fee"],
+    "body": "Under RBI's rules for recurring card and UPI payments (e-mandates), you must be notified before each debit and can withdraw the mandate at any time. Note the renewal date and how to cancel before you subscribe.",
+    "source_name": "RBI framework for e-mandates on recurring transactions",
+    "source_url": "https://www.rbi.org.in"
+  }
+]
