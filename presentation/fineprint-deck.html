@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FinePrint · the cost is in the fine print</title>
+
+<!-- Fonts: Barlow carries every word; IBM Plex Mono carries only the chrome (kickers, labels, numbers).
+     Noto Sans Devanagari covers the Hindi and Marathi on the language slide. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600;700;800;900&family=IBM+Plex+Mono:wght@400;500;700&family=Noto+Sans+Devanagari:wght@400;600&display=swap" rel="stylesheet">
+
+<style>
+/* ===========================================
+   THEME (Broadside: ink on fire)
+   Two registers only: dark slides for documentation, orange slides for declaration.
+   Change the colours here to re-theme the whole deck.
+   =========================================== */
+:root {
+    --stage-bg: #0a0a0a;
+    --ink: #111111;
+    --ink-alt: #1A1A18;
+    --fire: #E85D26;
+    --cream: #F0ECE5;
+    --cream-muted: #888880;
+    --cream-hint: #6a6a62;          /* lifted from #505048 so small text stays readable on a projector */
+    --border: #282826;
+    --on-orange-muted: rgba(17, 17, 17, 0.75);
+    --on-orange-hint: rgba(17, 17, 17, 0.55);
+    --on-orange-border: rgba(17, 17, 17, 0.2);
+
+    --display: 'Barlow', 'Noto Sans Devanagari', sans-serif;
+    --mono: 'IBM Plex Mono', monospace;
+
+    /* Type scale, translated from the template's vw values to the 1920×1080 stage */
+    --fs-display: 236px;   /* 13vw, slightly reduced to fit three words */
+    --fs-h1: 144px;        /* 7.5vw */
+    --fs-h2: 80px;         /* 4.5vw ≈ 86, trimmed for two-line headlines */
+    --fs-h3: 40px;
+    --fs-stat: 100px;      /* 5.5vw */
+    --fs-lead: 31px;       /* 1.6vw */
+    --fs-body: 24px;       /* 1.2vw, raised a touch for a reading deck */
+    --fs-caption: 19px;
+    --fs-label: 16px;      /* 0.72vw ≈ 14, raised for legibility */
+
+    /* Spacing on the stage */
+    --pad-x: 106px;        /* 5.5vw */
+    --pad-y: 60px;         /* 5.5vh */
+    --gap-lg: 38px; --gap-md: 22px; --gap-sm: 11px;
+
+    --ease-enter: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+/* ===========================================
+   FIXED 16:9 STAGE: MANDATORY BASE STYLES (viewport-base.css, in full)
+   =========================================== */
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+}
+.deck-viewport {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    background: var(--stage-bg, #000);
+}
+.deck-stage {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    transform-origin: 0 0;
+    background: var(--slide-bg, #fff);
+}
+.slide {
+    position: absolute;
+    inset: 0;
+    width: 1920px;
+    height: 1080px;
+    overflow: hidden;
+    display: block;
+    visibility: hidden;
+    opacity: 0;
+    pointer-events: none;
+    background: var(--slide-bg, #fff);
+}
+.slide.active,
+.slide.visible {
+    visibility: visible;
+    opacity: 1;
+    pointer-events: auto;
+    z-index: 1;
+}
+img,
+video,
+canvas,
+svg {
+    max-width: 100%;
+    max-height: 100%;
+}
+.deck-controls {
+    position: fixed;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%);
+    z-index: 1000;
+}
+@media print {
+    html,
+    body {
+        width: 1920px;
+        height: auto;
+        overflow: visible;
+        background: #fff;
+    }
+    .deck-viewport {
+        position: static;
+        overflow: visible;
+        background: #fff;
+    }
+    .deck-stage {
+        position: static;
+        width: auto;
+        height: auto;
+        transform: none !important;
+        background: none;
+    }
+    .slide {
+        position: relative;
+        display: block !important;
+        visibility: visible !important;
+        opacity: 1 !important;
+        pointer-events: auto !important;
+        width: 1920px;
+        height: 1080px;
+        break-after: page;
+        page-break-after: always;
+    }
+    .slide:last-child {
+        break-after: auto;
+        page-break-after: auto;
+    }
+    .deck-controls {
+        display: none !important;
+    }
+}
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        transition-duration: 0.2s !important;
+    }
+}
+
+/* ===========================================
+   REGISTERS: dark (content) and orange (declaration)
+   =========================================== */
+.slide { font-family: var(--display); }
+.slide.dark { --slide-bg: var(--ink); background: var(--ink); color: var(--cream); }
+.slide.orange { --slide-bg: var(--fire); background: var(--fire); color: var(--ink); }
+
+/* The frame every content slide sits in: chrome bar, body, foot bar */
+.frame { position: absolute; inset: var(--pad-y) var(--pad-x); display: flex; flex-direction: column; }
+.chrome, .foot {
+    display: flex; justify-content: space-between; align-items: baseline;
+    font-family: var(--mono); font-size: var(--fs-label); font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--cream-muted);
+}
+.chrome { padding-bottom: var(--gap-sm); border-bottom: 1px solid var(--border); margin-bottom: var(--gap-lg); }
+.foot { padding-top: var(--gap-sm); border-top: 1px solid var(--border); margin-top: auto; }
+.chrome b, .foot b { color: var(--fire); font-weight: 500; }
+.orange .chrome, .orange .foot { color: var(--on-orange-hint); border-color: var(--on-orange-border); }
+.orange .chrome b, .orange .foot b { color: var(--ink); }
+.body { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+
+/* ===========================================
+   TYPE ROLES (Barlow lowercase for words; Plex Mono uppercase for chrome)
+   =========================================== */
+.kicker { font-family: var(--mono); font-size: var(--fs-label); font-weight: 500; letter-spacing: 0.14em; text-transform: uppercase; color: var(--fire); margin-bottom: var(--gap-sm); }
+.orange .kicker { color: var(--on-orange-hint); }
+.display { font-size: var(--fs-display); font-weight: 900; line-height: 0.86; letter-spacing: -0.04em; }
+.h1 { font-size: var(--fs-h1); font-weight: 800; line-height: 0.9; letter-spacing: -0.03em; }
+.h2 { font-size: var(--fs-h2); font-weight: 700; line-height: 1.05; letter-spacing: -0.02em; max-width: 1500px; }
+.h3 { font-size: var(--fs-h3); font-weight: 700; line-height: 1.1; letter-spacing: -0.015em; }
+.lead { font-size: var(--fs-lead); line-height: 1.45; font-weight: 400; }
+.text { font-size: var(--fs-body); line-height: 1.5; font-weight: 400; }
+.muted { color: var(--cream-muted); }
+.orange .muted { color: var(--on-orange-muted); }
+.accent { color: var(--fire); }
+.mono-note { font-family: var(--mono); font-size: var(--fs-label); letter-spacing: 0.1em; text-transform: uppercase; color: var(--cream-hint); }
+.orange .mono-note { color: var(--on-orange-hint); }
+.rule { width: 36px; height: 2px; background: var(--fire); margin: var(--gap-md) 0; }
+.orange .rule { background: var(--ink); }
+.catalogue { position: absolute; top: var(--pad-y); left: var(--pad-x); font-family: var(--mono); font-size: 21px; font-weight: 500; letter-spacing: 0.1em; color: rgba(17, 17, 17, 0.45); }
+
+/* Slash-marked list: the system's only bullet */
+.slash { list-style: none; display: grid; gap: var(--gap-md); }
+.slash li { position: relative; padding-left: 40px; font-size: var(--fs-body); line-height: 1.5; }
+.slash li::before { content: "/"; position: absolute; left: 0; top: 0; font-family: var(--mono); font-weight: 700; color: var(--fire); }
+.orange .slash li::before { color: rgba(17, 17, 17, 0.45); }
+.slash li b { font-weight: 700; }
+
+/* Stat card: top border only, big figure, label, mono note */
+.stat { border-top: 1px solid var(--border); padding: var(--gap-md) var(--gap-md) 0 0; }
+.stat .v { font-size: var(--fs-stat); font-weight: 900; line-height: 1; letter-spacing: -0.04em; color: var(--fire); }
+.stat .v.sm { font-size: 72px; }
+.stat .l { font-size: var(--fs-body); line-height: 1.4; margin-top: 10px; }
+.stat .n { margin-top: 8px; }
+.orange .stat { border-color: var(--on-orange-border); }
+.orange .stat .v { color: var(--ink); }
+
+/* Tag: bordered mono label */
+.tag { display: inline-block; font-family: var(--mono); font-size: var(--fs-label); letter-spacing: 0.14em; text-transform: uppercase; color: var(--fire); border: 1px solid var(--fire); padding: 0.3em 0.8em; }
+
+/* Screenshot with a hairline caption */
+.shot { display: flex; flex-direction: column; gap: var(--gap-sm); }
+.shot img { display: block; width: 100%; height: auto; border: 1px solid var(--border); }
+.shot figcaption { font-family: var(--mono); font-size: var(--fs-label); letter-spacing: 0.1em; text-transform: uppercase; color: var(--cream-hint); }
+
+/* ===========================================
+   ENTRANCE ANIMATION: replays each time a slide becomes visible
+   =========================================== */
+.reveal { opacity: 0; transform: translateY(26px); transition: opacity 0.5s var(--ease-enter), transform 0.5s var(--ease-enter); }
+.slide.visible .reveal { opacity: 1; transform: none; }
+.slide.visible .reveal[data-d="1"] { transition-delay: 0.08s; }
+.slide.visible .reveal[data-d="2"] { transition-delay: 0.16s; }
+.slide.visible .reveal[data-d="3"] { transition-delay: 0.24s; }
+.slide.visible .reveal[data-d="4"] { transition-delay: 0.32s; }
+.slide.visible .reveal[data-d="5"] { transition-delay: 0.40s; }
+.slide.visible .reveal[data-d="6"] { transition-delay: 0.48s; }
+/* bars grow from their baseline */
+.grow { transform-origin: left; transform: scaleX(0); transition: transform 0.9s var(--ease-enter) 0.3s; }
+.slide.visible .grow { transform: scaleX(1); }
+.grow-y { transform-origin: bottom; transform: scaleY(0); transition: transform 0.9s var(--ease-enter) 0.3s; }
+.slide.visible .grow-y { transform: scaleY(1); }
+
+/* === SLIDE 1 · COVER ================================================================ */
+.cover .page { position: absolute; inset: 72px 96px; display: grid; grid-template-rows: auto 1fr auto; }
+.cover .mast { display: flex; justify-content: space-between; font-family: var(--mono); font-size: 20px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--cream-muted); border-bottom: 1px solid var(--border); padding-bottom: 22px; }
+.cover .mast b { color: var(--fire); font-weight: 500; }
+.cover .main { display: grid; grid-template-columns: 1fr 600px; gap: 72px; align-items: end; padding-top: 30px; }
+.cover .display { line-height: 0.82; }
+.cover .sub { font-size: 36px; line-height: 1.35; margin-top: 64px; max-width: 1000px; }
+.cover .card { background: var(--fire); color: var(--ink); padding: 44px 44px 40px; display: grid; gap: 24px; }
+.cover .card .lbl { font-family: var(--mono); font-size: 18px; letter-spacing: 0.12em; text-transform: uppercase; border-bottom: 1px solid var(--on-orange-border); padding-bottom: 16px; }
+.cover .card .fig { font-size: 132px; font-weight: 900; line-height: 0.9; letter-spacing: -0.03em; }
+.cover .card q { font-size: 26px; line-height: 1.4; quotes: none; font-weight: 500; }
+.cover .stats { display: flex; gap: 64px; font-family: var(--mono); font-size: 20px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cream-muted); border-top: 1px solid var(--border); padding-top: 22px; margin-top: 48px; }
+.cover .stats b { color: var(--cream); font-weight: 500; }
+
+/* === SLIDE 2 · PROBLEM =============================================================== */
+.problem .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 96px; margin-top: var(--gap-lg); flex: 1; }
+.problem .stats3 { display: grid; gap: var(--gap-md); align-content: start; }
+
+/* === SLIDES 3, 15 · STATEMENT (orange, no chrome) ==================================== */
+.statement .wrap { position: absolute; inset: 0 var(--pad-x); display: flex; flex-direction: column; justify-content: center; }
+.statement .h1 { max-width: 1650px; }
+.statement .h1 .dim { opacity: 0.45; }
+
+/* === SLIDE 4 · THE APP =============================================================== */
+.app .cols { display: grid; grid-template-columns: 640px 1fr; gap: 72px; flex: 1; align-items: start; }
+
+/* === SLIDE 5 · PIPELINE ============================================================== */
+.pipe { display: grid; grid-template-columns: repeat(3, 1fr); grid-template-rows: 1fr 1fr; gap: 0 56px; margin-top: var(--gap-lg); flex: 1; }
+.pipe .st { border-top: 1px solid var(--border); padding: 22px 0 18px; display: flex; flex-direction: column; gap: 10px; }
+.pipe .num { font-family: var(--mono); font-size: 18px; font-weight: 700; letter-spacing: 0.1em; color: var(--fire); }
+.pipe .h3 { font-size: 38px; }
+.pipe .text { font-size: 22px; color: var(--cream); }
+.pipe .mono-note { margin-top: auto; text-transform: none; letter-spacing: 0.02em; }
+
+/* === SLIDE 6 · TAXONOMY ============================================================== */
+.tax { display: grid; grid-template-columns: repeat(3, 1fr); gap: 56px; margin-top: var(--gap-lg); }
+.tax .grp { border-top: 2px solid var(--fire); padding-top: 18px; }
+.tax .grp .kicker { margin-bottom: 18px; }
+.tax ul { list-style: none; }
+.tax li { font-size: 30px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.25; padding: 13px 0; border-bottom: 1px solid var(--border); }
+
+/* === SLIDE 7 · DETECTION (compare) =================================================== */
+.compare { display: grid; grid-template-columns: 1fr 1fr; align-items: stretch; margin-top: var(--gap-lg); }
+.compare .lp { padding-right: 58px; border-right: 1px solid var(--border); display: flex; flex-direction: column; gap: var(--gap-md); }
+.compare .rp { background: var(--fire); color: var(--ink); padding: 40px 48px 44px; display: flex; flex-direction: column; gap: var(--gap-md); margin-left: 58px; }
+.compare .rp .kicker { color: var(--on-orange-hint); }
+.compare .rp .slash li::before { color: rgba(17, 17, 17, 0.5); }
+.compare .rp .text { color: var(--on-orange-muted); }
+.compare .slash { gap: 28px; }
+.compare .slash li { font-size: 27px; }
+.compare .h3 { font-size: 46px; }
+
+/* === SLIDE 8 · CALCULATOR ============================================================ */
+.calc .cols { display: grid; grid-template-columns: 820px 1fr; gap: 96px; flex: 1; margin-top: var(--gap-lg); }
+.sum { font-family: var(--mono); font-size: 40px; line-height: 1.7; }
+.sum div { display: grid; grid-template-columns: 60px 1fr auto; border-bottom: 1px solid var(--border); padding: 4px 0; }
+.sum div span:last-child { text-align: right; }
+.sum .op { color: var(--cream-hint); }
+.sum .total { border-bottom: 0; border-top: 2px solid var(--fire); margin-top: 8px; font-weight: 700; color: var(--fire); }
+.calc .grid2 { display: grid; grid-template-columns: 1fr 1fr; gap: 0 48px; align-content: start; }
+
+/* === SLIDE 9 · GUARDRAILS ============================================================ */
+.guards { display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; margin-top: 56px; }
+.guards .g { border-top: 2px solid var(--fire); padding-top: 22px; display: flex; flex-direction: column; gap: 16px; }
+.guards .g .num { font-family: var(--mono); font-size: 18px; font-weight: 700; color: var(--fire); letter-spacing: 0.1em; }
+.guards .g .h3 { font-size: 44px; }
+.guards .g .text { font-size: 25px; }
+.guards .g .eg { margin-top: 8px; background: var(--ink-alt); padding: 18px 20px; font-size: 21px; line-height: 1.45; color: var(--cream-muted); border-left: 2px solid var(--fire); }
+
+/* === SLIDE 10 · LANGUAGES ============================================================ */
+.lang .cols { display: grid; grid-template-columns: 1fr 380px; gap: 80px; flex: 1; margin-top: var(--gap-md); min-height: 0; }
+.flow { display: grid; gap: 0; margin-top: var(--gap-lg); }
+.flow .row { display: grid; grid-template-columns: 200px 1fr; gap: 24px; padding: 16px 0; border-top: 1px solid var(--border); align-items: baseline; }
+.flow .row .mono-note { color: var(--fire); }
+.flow .row .val { font-size: 30px; font-weight: 600; letter-spacing: -0.01em; line-height: 1.3; }
+.flow .row .val .add { color: var(--cream-muted); font-weight: 500; }
+.lang .phone { align-self: start; }
+.lang .phone img { width: 360px; }
+
+/* === SLIDE 11 · EVALUATION (vertical bars) =========================================== */
+.eval .cols { display: grid; grid-template-columns: 1000px 1fr; gap: 96px; flex: 1; margin-top: var(--gap-lg); }
+.bars { display: grid; grid-template-columns: repeat(5, 1fr); gap: 36px; height: 470px; border-left: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 0 0 0 36px; align-items: end; }
+.bars .b { display: flex; flex-direction: column; justify-content: flex-end; height: 100%; }
+.bars .fill { background: var(--cream-hint); position: relative; }
+.bars .fill.hot { background: var(--fire); }
+.bars .val { font-size: 44px; font-weight: 900; letter-spacing: -0.03em; margin-bottom: 10px; }
+.bars .hot-v { color: var(--fire); }
+.bar-labels { display: grid; grid-template-columns: repeat(5, 1fr); gap: 36px; padding-left: 37px; margin-top: 14px; }
+.bar-labels span { font-family: var(--mono); font-size: 15px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cream-muted); line-height: 1.4; }
+.eval .side { display: grid; gap: var(--gap-md); align-content: start; }
+
+/* === SLIDE 12 · PER CATEGORY (horizontal bars) ======================================= */
+.cat .cols { display: grid; grid-template-columns: 1fr 560px; gap: 96px; flex: 1; margin-top: var(--gap-md); }
+.hbars { display: grid; gap: 7px; align-content: start; }
+.hbars .r { display: grid; grid-template-columns: 380px 1fr 70px; gap: 20px; align-items: center; height: 38px; }
+.hbars .r .k { font-size: 22px; font-weight: 500; white-space: nowrap; }
+.hbars .track { height: 14px; }
+.hbars .fill { height: 100%; background: var(--cream-hint); }
+.hbars .r.miss .fill { background: var(--fire); }
+.hbars .r.miss .k, .hbars .r.miss .v { color: var(--fire); }
+.hbars .v { font-family: var(--mono); font-size: 20px; text-align: right; }
+.errs { display: grid; gap: 0; align-content: start; }
+.errs .e { display: grid; grid-template-columns: 70px 1fr; gap: 16px; padding: 14px 0; border-top: 1px solid var(--border); font-size: 22px; line-height: 1.4; }
+.errs .e .mono-note { color: var(--fire); padding-top: 4px; }
+
+/* === SLIDE 13 · LIMITS (compare, orange payoff) ===================================== */
+/* uses .compare */
+
+/* === SLIDE 14 · ENGINEERING ========================================================= */
+.eng .stats4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 48px; margin-top: var(--gap-lg); }
+.eng .bottom { display: grid; grid-template-columns: 1fr 1fr; gap: 96px; margin-top: 56px; }
+
+/* === SLIDE 15 · END ================================================================= */
+.end .wrap { position: absolute; inset: 0 var(--pad-x); display: flex; flex-direction: column; justify-content: center; }
+.end .meta { display: flex; gap: 64px; margin-top: 72px; font-family: var(--mono); font-size: 22px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--on-orange-muted); border-top: 1px solid var(--on-orange-border); padding-top: 22px; }
+
+/* ===========================================
+   PRESENTER CHROME (outside the stage): progress bar and counter
+   =========================================== */
+.progress { position: fixed; left: 0; top: 0; height: 3px; background: var(--fire); z-index: 1001; transition: width 0.4s var(--ease-enter); }
+.counter { position: fixed; right: 18px; bottom: 14px; z-index: 1001; font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; color: #8a8a82; }
+
+/* ===========================================
+   INLINE EDITING (hover the top-left corner or press E)
+   =========================================== */
+.edit-hotzone { position: fixed; top: 0; left: 0; width: 80px; height: 80px; z-index: 10000; cursor: pointer; }
+.edit-toggle {
+    position: fixed; top: 16px; left: 16px; z-index: 10001; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase;
+    background: var(--ink); color: var(--cream); border: 1px solid var(--fire); padding: 8px 12px; cursor: pointer;
+}
+.edit-toggle.show, .edit-toggle.active { opacity: 1; pointer-events: auto; }
+.edit-toggle.active { background: var(--fire); color: var(--ink); }
+body.editing [contenteditable="true"] { outline: 1px dashed rgba(232, 93, 38, 0.6); outline-offset: 4px; cursor: text; }
+/* Automated browsers (PDF export, screenshots) get the slides without presenter controls */
+body.export .edit-toggle, body.export .edit-hotzone, body.export .progress, body.export .counter { display: none !important; }
+</style>
+</head>
+<body>
+<div class="progress" id="progress"></div>
+<div class="counter" id="counter" aria-live="polite"></div>
+<div class="edit-hotzone" aria-hidden="true"></div>
+<button class="edit-toggle" id="editToggle" title="Edit mode (E)">Edit</button>
+
+<div class="deck-viewport">
+<main class="deck-stage" id="deckStage">
+
+<!-- ============================================ 01 · COVER -->
+<section class="slide dark cover" aria-label="Cover">
+  <div class="page">
+    <p class="mast reveal" data-d="1"><span><b>FinePrint</b> · An NLP project</span><span>October 2026</span></p>
+    <div class="main">
+      <div>
+        <h1 class="display reveal" data-d="2">the cost is in the <span class="accent">fine print.</span></h1>
+        <p class="sub reveal" data-d="3">FinePrint reads Indian loan, credit card and insurance documents, finds the clauses that can cost you money, and prices each one in rupees.</p>
+      </div>
+      <div class="card reveal" data-d="4">
+        <p class="lbl">Clause 5 · Personal loan</p>
+        <p class="fig">₹10,620</p>
+        <q>“…subject to a minimum of ₹5,000, will be deducted from the disbursal amount and is non-refundable.”</q>
+      </div>
+    </div>
+    <p class="stats reveal" data-d="5"><span><b>14</b> risk types</span><span><b>4</b> languages</span><span><b>0.84</b> F1 on held-out documents</span></p>
+  </div>
+</section>
+
+<!-- ============================================ 02 · THE PROBLEM -->
+<section class="slide dark problem" aria-label="The problem">
+  <div class="frame">
+    <div class="chrome"><span><b>01</b> · The problem</span><span>02 / 15</span></div>
+    <div class="body">
+      <p class="kicker reveal" data-d="1">Why this exists</p>
+      <h2 class="h2 reveal" data-d="2">the terms that cost money are written to be skipped.</h2>
+      <div class="cols">
+        <div>
+          <p class="lead reveal" data-d="3">A sanction letter, a credit card's terms or a health policy runs to pages of legal English. The lines that cost money are scattered through it, stated as a percentage of something, and seldom in the reader's first language.</p>
+          <div class="rule reveal" data-d="3"></div>
+          <ul class="slash reveal" data-d="4">
+            <li><b>Percentages, not rupees.</b> "3% plus GST" hides a five-figure fee.</li>
+            <li><b>Scattered.</b> Fees, penalties and rate changes sit far apart.</li>
+            <li><b>One language.</b> Many borrowers read Hindi or Marathi first.</li>
+          </ul>
+        </div>
+        <div class="stats3">
+          <p class="mono-note reveal" data-d="3">One sample: a personal loan sanction letter</p>
+          <div class="stat reveal" data-d="4"><p class="v">20</p><p class="l">clauses in the letter</p></div>
+          <div class="stat reveal" data-d="5"><p class="v">9</p><p class="l">of them can cost the borrower money; 6 are high risk</p></div>
+          <div class="stat reveal" data-d="6"><p class="v">₹10,620</p><p class="l">the fee behind "3% of the loan amount plus GST", taken before the money arrives</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span>FinePrint</span><span>Sample s01 · ₹3,00,000 at 16% for 36 months</span></div>
+  </div>
+</section>
+
+<!-- ============================================ 03 · STATEMENT -->
+<section class="slide orange statement" aria-label="Two rules">
+  <p class="catalogue">03</p>
+  <div class="wrap">
+    <p class="kicker reveal" data-d="1">The two rules FinePrint is built on</p>
+    <h2 class="h1 reveal" data-d="2">every flag quotes the document. <span class="dim">every rupee is calculated, not generated.</span></h2>
+    <div class="rule reveal" data-d="3"></div>
+    <p class="lead reveal" data-d="3" style="max-width:1150px;color:var(--on-orange-muted)">A language model can help find and explain risks, but it never invents a clause and never does arithmetic. Both rules are enforced in code.</p>
+  </div>
+</section>
+
+<!-- ============================================ 04 · THE APP -->
+<section class="slide dark app" aria-label="The app">
+  <div class="frame">
+    <div class="chrome"><span><b>02</b> · The app</span><span>04 / 15</span></div>
+    <div class="body">
+      <div class="cols">
+        <div>
+          <p class="kicker reveal" data-d="1">Three steps</p>
+          <h2 class="h2 reveal" data-d="2">add. review. ask.</h2>
+          <div class="rule reveal" data-d="2"></div>
+          <ul class="slash reveal" data-d="3">
+            <li><b>Add.</b> Paste the text, upload a PDF (bank PDFs locked against editing included) or pick one of 12 samples. Names, PAN, Aadhaar, card, account and phone numbers are hidden first.</li>
+            <li><b>Review.</b> Each risky clause with its severity, its cost in rupees and the exact quote. A risk map shows where in the document the problems sit.</li>
+            <li><b>Ask.</b> Questions in English, हिन्दी, मराठी or Hinglish, answered from the document's own clauses.</li>
+          </ul>
+        </div>
+        <figure class="shot reveal" data-d="4">
+          <img src="assets/app-review.png" alt="FinePrint's review screen: 9 things to check in a loan agreement, a risk map, and the processing fee card showing ₹10,620 taken upfront">
+          <figcaption>Review screen · sample personal loan · rules only, no API key</figcaption>
+        </figure>
+      </div>
+    </div>
+    <div class="foot"><span>FinePrint</span><span>FastAPI · plain JavaScript · no build step</span></div>
+  </div>
+</section>
+
+<!-- ============================================ 05 · PIPELINE -->
+<section class="slide dark" aria-label="Pipeline">
+  <div class="frame">
+    <div class="chrome"><span><b>03</b> · How it works</span><span>05 / 15</span></div>
+    <div class="body">
+      <p class="kicker reveal" data-d="1">The NLP pipeline</p>
+      <h2 class="h2 reveal" data-d="2">six stages, one pass over the document.</h2>
+      <div class="pipe">
+        <div class="st reveal" data-d="2"><p class="num">01 · Ingest</p><p class="h3">read and mask</p><p class="text">PDF or text to plain text. Personal identifiers are masked by ordered patterns, so a card number is never mistaken for Aadhaar and ₹1,50,000 is never touched.</p><p class="mono-note">ingest/loader.py · pii.py</p></div>
+        <div class="st reveal" data-d="3"><p class="num">02 · Segment</p><p class="h3">split into clauses</p><p class="text">A clause starts at a numbered or bulleted line. Short title lines become headings. Every clause keeps its exact character offsets, so quotes can be checked later.</p><p class="mono-note">ingest/segmenter.py</p></div>
+        <div class="st reveal" data-d="4"><p class="num">03 · Extract</p><p class="h3">find the numbers</p><p class="text">Rupee amounts with Indian commas, lakh and crore; percentages per month or year; durations. Then the loan amount, rate, tenure and EMI for the whole document.</p><p class="mono-note">extract/money.py · context.py</p></div>
+        <div class="st reveal" data-d="4"><p class="num">04 · Detect</p><p class="h3">flag the risks</p><p class="text">Weighted wording cues for 14 risk categories, plus an optional language model. Every model quote must appear in the clause or the flag is dropped.</p><p class="mono-note">risk/rules.py · llm_classifier.py · verify.py</p></div>
+        <div class="st reveal" data-d="5"><p class="num">05 · Calculate</p><p class="h3">turn it into rupees</p><p class="text">One deterministic function per category, fed by the clause and the document's numbers. Each result states its assumptions. The user can change the numbers.</p><p class="mono-note">calc/impact.py</p></div>
+        <div class="st reveal" data-d="6"><p class="num">06 · Explain &amp; answer</p><p class="h3">say it plainly</p><p class="text">Three reading levels, four languages. Questions are answered by BM25 retrieval over the clauses; 15 reference notes from RBI, IRDAI and general guidance say why each risk matters.</p><p class="mono-note">explain/ · qa/ · kb/</p></div>
+      </div>
+    </div>
+    <div class="foot"><span>FinePrint</span><span>Runs end to end with no language model</span></div>
+  </div>
+</section>
+
+<!-- ============================================ 06 · TAXONOMY -->
+<section class="slide dark" aria-label="Risk taxonomy">
+  <div class="frame">
+    <div class="chrome"><span><b>04</b> · What it looks for</span><span>06 / 15</span></div>
+    <div class="body">
+      <p class="kicker reveal" data-d="1">The risk taxonomy</p>
+      <h2 class="h2 reveal" data-d="2">14 kinds of clause that can cost you.</h2>
+      <div class="tax">
+        <div class="grp reveal" data-d="3">
+          <p class="kicker">What it costs you · 7</p>
+          <ul><li>Upfront or processing fee</li><li>Charge for paying early</li><li>Late payment charges</li><li>EMI bounce charge</li><li>Annual or recurring fee</li><li>'0% EMI' that is not free</li><li>Paying only the minimum due</li></ul>
+        </div>
+        <div class="grp reveal" data-d="4">
+          <p class="kicker">What can change later · 3</p>
+          <ul><li>Interest rate can change</li><li>Terms can change without your consent</li><li>Renews and charges automatically</li></ul>
+          <p class="text muted" style="margin-top:28px">Each category has a default severity, wording cues with weights, and its own rupee formula. Severity can rise with the amount: a processing fee of 3% of the loan or more is high risk.</p>
+        </div>
+        <div class="grp reveal" data-d="5">
+          <p class="kicker">Your money, data and cover · 4</p>
+          <ul><li>Money can be taken from your other accounts</li><li>Insurance added to your loan</li><li>Your data is shared</li><li>Waiting period, co-pay or exclusion</li></ul>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span>FinePrint</span><span>risk/taxonomy.py</span></div>
+  </div>
+</section>
+
+<!-- ============================================ 07 · DETECTION -->
+<section class="slide dark" aria-label="Detection">
+  <div class="frame">
+    <div class="chrome"><span><b>05</b> · Detection</span><span>07 / 15</span></div>
+    <div class="body">
+      <p class="kicker reveal" data-d="1">Rules, model, or both</p>
+      <h2 class="h2 reveal" data-d="2">rules for precision, a model for reach.</h2>
+      <div class="compare">
+        <div class="lp reveal" data-d="3">
+          <p class="h3">rules, always on</p>
+          <ul class="slash">
+            <li><b>Weighted cues.</b> Each category has regular-expression cues with weights; a clause is flagged when the cue weight is high enough.</li>
+            <li><b>No key, no network.</b> Rules-only mode is the baseline every test and the evaluation run on.</li>
+            <li><b>Confidence.</b> A rule hit scoring 4 or more is high confidence, otherwise medium.</li>
+          </ul>
+          <p class="mono-note" style="margin-top:8px">Optional model: any OpenAI-compatible API · clauses sent in batches of 25</p>
+        </div>
+        <div class="rp reveal" data-d="4">
+          <p class="kicker">Hybrid: the default when a model is set up</p>
+          <p class="h3">the union of both, checked.</p>
+          <ul class="slash">
+            <li><b>Both agree:</b> high confidence.</li>
+            <li><b>Model only:</b> medium, and only if its quote is found word for word in the clause.</li>
+            <li><b>Why a union:</b> in a consumer-protection tool a missed trap costs more than an extra flag, and every flag quotes the document, so a reader can judge it in seconds.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span>FinePrint</span><span>risk/pipeline.py</span></div>
+  </div>
+</section>
+
+<!-- ============================================ 08 · CALCULATOR -->
+<section class="slide dark calc" aria-label="Rupee calculator">
+  <div class="frame">
+    <div class="chrome"><span><b>06</b> · The calculator</span><span>08 / 15</span></div>
+    <div class="body">
+      <p class="kicker reveal" data-d="1">From percentages to rupees</p>
+      <h2 class="h2 reveal" data-d="2">the language model never does arithmetic.</h2>
+      <div class="cols">
+        <div>
+          <p class="mono-note reveal" data-d="3" style="margin-bottom:14px">Clause 5: "processing fee of 3% of the loan amount plus GST"</p>
+          <div class="sum reveal" data-d="3">
+            <div><span class="op"></span><span>3% × ₹3,00,000</span><span>₹9,000</span></div>
+            <div><span class="op">+</span><span>18% GST on the fee</span><span>₹1,620</span></div>
+            <div class="total"><span>=</span><span>taken upfront</span><span>₹10,620</span></div>
+          </div>
+          <p class="text muted reveal" data-d="4" style="margin-top:28px">Plain Python, one function per category. The ₹3,00,000 came from clause 1; change it in the app and every figure updates in under a second. An explanation that used the old number is reset to the standard text.</p>
+        </div>
+        <div class="grid2">
+          <div class="stat reveal" data-d="3"><p class="v sm">₹8,850</p><p class="l">if ₹1,50,000 is repaid early</p><p class="n mono-note">Clause 6 · 5% + GST</p></div>
+          <div class="stat reveal" data-d="4"><p class="v sm">₹590</p><p class="l">every time an EMI bounces</p><p class="n mono-note">Clause 9 · ₹500 + GST</p></div>
+          <div class="stat reveal" data-d="5" style="margin-top:36px"><p class="v sm">₹211</p><p class="l">for each month one EMI stays unpaid</p><p class="n mono-note">Clause 8 · 2% a month</p></div>
+          <div class="stat reveal" data-d="6" style="margin-top:36px"><p class="v sm">₹8,225</p><p class="l">a ₹6,499 insurance premium costs once interest is paid on it</p><p class="n mono-note">Clause 10 · bundled cover</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span>FinePrint</span><span>calc/impact.py · every figure from the sample s01</span></div>
+  </div>
+</section>
+
+<!-- ============================================ 09 · GUARDRAILS -->
+<section class="slide dark" aria-label="Guardrails">
+  <div class="frame">
+    <div class="chrome"><span><b>07</b> · Guardrails</span><span>09 / 15</span></div>
+    <div class="body">
+      <p class="kicker reveal" data-d="1">Against hallucination and over-reach</p>
+      <h2 class="h2 reveal" data-d="2">four checks between the model and the reader.</h2>
+      <div class="guards">
+        <div class="g reveal" data-d="3"><p class="num">Quote check</p><p class="h3">no quote, no flag</p><p class="text">A model's flag is kept only if its quote appears in the clause, after normalising curly quotes and dashes. A paraphrase or an invented clause cannot pass.</p><p class="eg">"N model suggestions were removed because their quote was not found in the document."</p></div>
+        <div class="g reveal" data-d="4"><p class="num">Number guard</p><p class="h3">no new numbers</p><p class="text">An explanation may only use numbers from its clause or from the calculator. If the model changes or invents one, that explanation is replaced by the template.</p><p class="eg">For example: the model writes "₹11,000" where the calculator said ₹10,620, so the template is shown instead.</p></div>
+        <div class="g reveal" data-d="5"><p class="num">Citation check</p><p class="h3">answers cite clauses</p><p class="text">Answers must cite the clauses retrieved for the question. Invalid citations are removed; an answer that cites nothing is replaced by the quoted clauses.</p><p class="eg">"…a bounce charge of ₹500 plus applicable GST…" [clause 9]</p></div>
+        <div class="g reveal" data-d="6"><p class="num">Advice guardrail</p><p class="h3">explains, never advises</p><p class="text">Questions asking what to do, in any of the four languages, get an explanation of the terms and a plain statement that FinePrint does not give financial advice.</p><p class="eg">"kya mujhe yeh loan lena chahiye?"</p></div>
+      </div>
+    </div>
+    <div class="foot"><span>FinePrint</span><span>risk/verify.py · explain/explainer.py · qa/chat.py · qa/guardrails.py</span></div>
+  </div>
+</section>
+
+<!-- ============================================ 10 · LANGUAGES -->
+<section class="slide dark lang" aria-label="Languages">
+  <div class="frame">
+    <div class="chrome"><span><b>08</b> · Languages</span><span>10 / 15</span></div>
+    <div class="body">
+      <div class="cols">
+        <div>
+          <p class="kicker reveal" data-d="1">Code-mixed questions</p>
+          <h2 class="h2 reveal" data-d="2">hinglish is not english.</h2>
+          <p class="lead reveal" data-d="3" style="margin-top:22px;max-width:1100px">Standard language detectors label Hindi typed in Roman letters as English, so retrieval fails on the Hindi words. FinePrint spots it with a function-word lexicon, then adds English synonyms to the query so BM25 can match the document.</p>
+          <div class="flow reveal" data-d="4">
+            <div class="row"><span class="mono-note">Question</span><span class="val">mera EMI bounce hua toh kitna lagega?</span></div>
+            <div class="row"><span class="mono-note">Detected</span><span class="val">Hinglish</span></div>
+            <div class="row"><span class="mono-note">Expanded</span><span class="val">… <span class="add">+ emi instalment bounce dishonour nach ecs mandate return charges</span></span></div>
+            <div class="row"><span class="mono-note">Answer</span><span class="val">clause 9: ₹590 every time an EMI bounces · clause 8: ₹211 for each month one EMI stays unpaid</span></div>
+          </div>
+        </div>
+        <figure class="shot phone reveal" data-d="5">
+          <img src="assets/app-ask-phone.png" alt="FinePrint on a phone: the ask screen with suggested questions in English, Hinglish and Hindi">
+          <figcaption>Ask screen at 360 px</figcaption>
+        </figure>
+      </div>
+    </div>
+    <div class="foot"><span>FinePrint</span><span>qa/lang.py · qa/chat.py · kb/bm25.py</span></div>
+  </div>
+</section>
+
+<!-- ============================================ 11 · EVALUATION -->
+<section class="slide dark eval" aria-label="Evaluation">
+  <div class="frame">
+    <div class="chrome"><span><b>09</b> · Evaluation</span><span>11 / 15</span></div>
+    <div class="body">
+      <p class="kicker reveal" data-d="1">Rules only, against 64 hand-labelled risks</p>
+      <h2 class="h2 reveal" data-d="2">0.84 F1 on documents the rules never saw.</h2>
+      <div class="cols">
+        <div class="reveal" data-d="3">
+          <div class="bars">
+            <div class="b"><p class="val">1.00</p><div class="fill grow-y" style="height:100%"></div></div>
+            <div class="b"><p class="val">0.93</p><div class="fill grow-y" style="height:93%"></div></div>
+            <div class="b"><p class="val">0.77</p><div class="fill grow-y" style="height:77%"></div></div>
+            <div class="b"><p class="val hot-v">0.84</p><div class="fill hot grow-y" style="height:84%"></div></div>
+            <div class="b"><p class="val">0.96</p><div class="fill grow-y" style="height:96%"></div></div>
+          </div>
+          <div class="bar-labels"><span>Dev F1<br>8 docs</span><span>Test precision</span><span>Test recall</span><span>Test F1<br>4 docs</span><span>All F1<br>12 docs</span></div>
+        </div>
+        <div class="side">
+          <div class="stat reveal" data-d="4"><p class="v sm">13 / 17</p><p class="l">test risks found, with 1 false alarm</p></div>
+          <div class="stat reveal" data-d="5"><p class="v sm">21 / 23</p><p class="l">pre-filled loan numbers correct (amount, rate, tenure, EMI)</p></div>
+          <div class="stat reveal" data-d="6"><p class="v sm">88.7 → 68.2</p><p class="l">Flesch reading ease, Simple vs Expert explanations (higher is easier)</p></div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span>FinePrint</span><span>The dev split was used to write the rules; the test split was never used for tuning · eval/run_eval.py</span></div>
+  </div>
+</section>
+
+<!-- ============================================ 12 · PER CATEGORY -->
+<section class="slide dark cat" aria-label="Per-category results">
+  <div class="frame">
+    <div class="chrome"><span><b>09</b> · Evaluation</span><span>12 / 15</span></div>
+    <div class="body">
+      <p class="kicker reveal" data-d="1">F1 per risk category, all 12 documents</p>
+      <h2 class="h2 reveal" data-d="2">the misses cluster in five categories.</h2>
+      <div class="cols">
+        <div class="hbars reveal" data-d="3">
+          <div class="r"><span class="k">Upfront or processing fee</span><div class="track"><div class="fill grow" style="width:100%"></div></div><span class="v">1.00</span></div>
+          <div class="r"><span class="k">Charge for paying early</span><div class="track"><div class="fill grow" style="width:100%"></div></div><span class="v">1.00</span></div>
+          <div class="r"><span class="k">Late payment charges</span><div class="track"><div class="fill grow" style="width:100%"></div></div><span class="v">1.00</span></div>
+          <div class="r"><span class="k">EMI bounce charge</span><div class="track"><div class="fill grow" style="width:100%"></div></div><span class="v">1.00</span></div>
+          <div class="r"><span class="k">Annual or recurring fee</span><div class="track"><div class="fill grow" style="width:100%"></div></div><span class="v">1.00</span></div>
+          <div class="r"><span class="k">'0% EMI' that is not free</span><div class="track"><div class="fill grow" style="width:100%"></div></div><span class="v">1.00</span></div>
+          <div class="r"><span class="k">Insurance added to your loan</span><div class="track"><div class="fill grow" style="width:100%"></div></div><span class="v">1.00</span></div>
+          <div class="r"><span class="k">Terms can change</span><div class="track"><div class="fill grow" style="width:100%"></div></div><span class="v">1.00</span></div>
+          <div class="r"><span class="k">Your data is shared</span><div class="track"><div class="fill grow" style="width:100%"></div></div><span class="v">1.00</span></div>
+          <div class="r miss"><span class="k">Waiting period, co-pay, exclusion</span><div class="track"><div class="fill grow" style="width:93%"></div></div><span class="v">0.93</span></div>
+          <div class="r miss"><span class="k">Money taken from other accounts</span><div class="track"><div class="fill grow" style="width:89%"></div></div><span class="v">0.89</span></div>
+          <div class="r miss"><span class="k">Interest rate can change</span><div class="track"><div class="fill grow" style="width:86%"></div></div><span class="v">0.86</span></div>
+          <div class="r miss"><span class="k">Paying only the minimum due</span><div class="track"><div class="fill grow" style="width:86%"></div></div><span class="v">0.86</span></div>
+          <div class="r miss"><span class="k">Renews automatically</span><div class="track"><div class="fill grow" style="width:80%"></div></div><span class="v">0.80</span></div>
+        </div>
+        <div class="errs reveal" data-d="4">
+          <p class="kicker">All five errors, all on test documents</p>
+          <div class="e"><span class="mono-note">Miss</span><span>"recovered from any bank account linked": set-off worded without "set-off" or "lien" (instant loan app)</span></div>
+          <div class="e"><span class="mono-note">Miss</span><span>"interest-free period … is not available": the minimum-due trap stated indirectly (credit card)</span></div>
+          <div class="e"><span class="mono-note">Miss</span><span>"renews each year on the policy anniversary" (accident cover)</span></div>
+          <div class="e"><span class="mono-note">Miss</span><span>"A deductible of Rs. 5,000" (accident cover)</span></div>
+          <div class="e"><span class="mono-note">False</span><span>"may revise premium rates at renewal" read as a floating interest rate</span></div>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span>FinePrint</span><span>eval/results.md</span></div>
+  </div>
+</section>
+
+<!-- ============================================ 13 · LIMITS -->
+<section class="slide dark" aria-label="Limitations">
+  <div class="frame">
+    <div class="chrome"><span><b>10</b> · Honest limits</span><span>13 / 15</span></div>
+    <div class="body">
+      <p class="kicker reveal" data-d="1">Reading the 0.84 correctly</p>
+      <h2 class="h2 reveal" data-d="2">what the score does not tell you.</h2>
+      <div class="compare">
+        <div class="lp reveal" data-d="3">
+          <p class="h3">limits today</p>
+          <ul class="slash">
+            <li><b>Same authors.</b> The 12 sample documents and the rules were written by the same team, and the test split has only 4 documents. Real documents will score lower.</li>
+            <li><b>Model not yet scored.</b> The language-model and hybrid methods are built and tested with a stand-in model, but have not been scored with a real API key.</li>
+            <li><b>Text only.</b> Scanned PDFs have no text to read, and fee tables split into clauses less cleanly than sentences do.</li>
+          </ul>
+        </div>
+        <div class="rp reveal" data-d="4">
+          <p class="kicker">Next</p>
+          <p class="h3">score it on real documents.</p>
+          <ul class="slash">
+            <li><b>Collect.</b> Real sanction letters, card terms and policies in <span style="font-family:var(--mono);font-size:21px">data/real/</span>, kept out of git.</li>
+            <li><b>Label twice.</b> Two annotators label independently; agreement measured with Cohen's κ (<span style="font-family:var(--mono);font-size:21px">eval/kappa.py</span>).</li>
+            <li><b>Compare.</b> Score rules, model and hybrid on the same held-out set.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="foot"><span>FinePrint</span><span>Never tune on the test split · never edit the gold labels to raise a score</span></div>
+  </div>
+</section>
+
+<!-- ============================================ 14 · ENGINEERING -->
+<section class="slide dark eng" aria-label="Engineering">
+  <div class="frame">
+    <div class="chrome"><span><b>11</b> · Engineering</span><span>14 / 15</span></div>
+    <div class="body">
+      <p class="kicker reveal" data-d="1">Built to run anywhere</p>
+      <h2 class="h2 reveal" data-d="2">works with no API key. stores nothing.</h2>
+      <div class="stats4">
+        <div class="stat reveal" data-d="3"><p class="v">56</p><p class="l">automated tests, none needing a network or a key</p></div>
+        <div class="stat reveal" data-d="4"><p class="v">0</p><p class="l">documents stored; personal data is masked before analysis</p></div>
+        <div class="stat reveal" data-d="5"><p class="v">1</p><p class="l">Docker image for Render or any host; Vercel runs it as a function</p></div>
+        <div class="stat reveal" data-d="6"><p class="v">12</p><p class="l">sample documents, each also as a PDF to test the upload</p></div>
+      </div>
+      <div class="bottom">
+        <ul class="slash reveal" data-d="5">
+          <li><b>Stack.</b> Python and FastAPI on the server; plain JavaScript in the browser, no build step. Any OpenAI-compatible model (Groq, Gemini, OpenAI) through three environment variables.</li>
+          <li><b>Encrypted PDFs.</b> Bank PDFs locked against editing are read; a PDF that needs a password gets a clear message.</li>
+        </ul>
+        <ul class="slash reveal" data-d="6">
+          <li><b>Every push.</b> CI runs the tests and the evaluation, then builds the container and smoke-tests it.</li>
+          <li><b>Usable by anyone.</b> 44 px touch targets, visible keyboard focus, risk never shown by colour alone, works at 360 px, back button works.</li>
+        </ul>
+      </div>
+    </div>
+    <div class="foot"><span>FinePrint</span><span>.github/workflows/ci.yml · Dockerfile · render.yaml</span></div>
+  </div>
+</section>
+
+<!-- ============================================ 15 · END -->
+<section class="slide orange end" aria-label="End">
+  <p class="catalogue">15</p>
+  <div class="wrap">
+    <h2 class="display reveal" data-d="1">read it before you sign.</h2>
+    <div class="meta reveal" data-d="3"><span>github.com/08pranav/fineprint</span><span>FinePrint explains documents. It is not financial advice.</span></div>
+  </div>
+</section>
+
+</main>
+</div>
+
+<script>
+/* ===========================================
+   SLIDE PRESENTATION CONTROLLER
+   Fixed 1920×1080 stage scaled to the window; keyboard, wheel and swipe navigation;
+   the URL hash keeps the slide number so a refresh stays on the same slide.
+   =========================================== */
+class SlidePresentation {
+    constructor() {
+        this.slides = Array.from(document.querySelectorAll('.slide'));
+        this.stage = document.getElementById('deckStage');
+        this.current = 0;
+        this.wheelLock = false;
+        this.setupStageScale();
+        this.setupKeyboardNav();
+        this.setupWheelNav();
+        this.setupTouchNav();
+        const fromHash = parseInt(location.hash.slice(1), 10);
+        this.show(Number.isFinite(fromHash) ? fromHash - 1 : 0);
+        window.addEventListener('hashchange', () => {
+            const n = parseInt(location.hash.slice(1), 10);
+            if (Number.isFinite(n) && n - 1 !== this.current) this.show(n - 1);
+        });
+    }
+
+    setupStageScale() {
+        const scale = () => {
+            const f = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+            const x = (window.innerWidth - 1920 * f) / 2;
+            const y = (window.innerHeight - 1080 * f) / 2;
+            this.stage.style.transform = `translate(${x}px, ${y}px) scale(${f})`;
+        };
+        scale();
+        window.addEventListener('resize', scale);
+    }
+
+    setupKeyboardNav() {
+        document.addEventListener('keydown', (e) => {
+            if (e.target.isContentEditable) return;
+            if (['ArrowRight', 'ArrowDown', 'PageDown', ' ', 'Enter'].includes(e.key)) { e.preventDefault(); this.show(this.current + 1); }
+            if (['ArrowLeft', 'ArrowUp', 'PageUp', 'Backspace'].includes(e.key)) { e.preventDefault(); this.show(this.current - 1); }
+            if (e.key === 'Home') this.show(0);
+            if (e.key === 'End') this.show(this.slides.length - 1);
+        });
+    }
+
+    setupWheelNav() {
+        window.addEventListener('wheel', (e) => {
+            if (this.wheelLock || Math.abs(e.deltaY) < 30) return;
+            this.wheelLock = true;
+            this.show(this.current + (e.deltaY > 0 ? 1 : -1));
+            setTimeout(() => { this.wheelLock = false; }, 700);
+        }, { passive: true });
+    }
+
+    setupTouchNav() {
+        let x0 = null;
+        window.addEventListener('touchstart', (e) => { x0 = e.touches[0].clientX; }, { passive: true });
+        window.addEventListener('touchend', (e) => {
+            if (x0 === null) return;
+            const dx = e.changedTouches[0].clientX - x0;
+            if (Math.abs(dx) > 50) this.show(this.current + (dx < 0 ? 1 : -1));
+            x0 = null;
+        }, { passive: true });
+    }
+
+    show(index) {
+        this.current = Math.max(0, Math.min(index, this.slides.length - 1));
+        this.slides.forEach((s, i) => {
+            const on = i === this.current;
+            s.classList.toggle('active', on);
+            s.setAttribute('aria-hidden', String(!on));
+            // remove then re-add .visible so entrance animations replay on every visit
+            s.classList.remove('visible');
+        });
+        const active = this.slides[this.current];
+        void active.offsetWidth;
+        requestAnimationFrame(() => active.classList.add('visible'));
+        document.getElementById('progress').style.width = `${((this.current + 1) / this.slides.length) * 100}%`;
+        document.getElementById('counter').textContent = `${String(this.current + 1).padStart(2, '0')} / ${this.slides.length}`;
+        if (location.hash !== `#${this.current + 1}`) history.replaceState(null, '', `#${this.current + 1}`);
+    }
+}
+
+/* ===========================================
+   INLINE EDITOR
+   Press E (or hover the top-left corner and click Edit) to edit any text.
+   Edits are saved in this browser automatically; Ctrl/Cmd+S downloads the edited file.
+   =========================================== */
+class InlineEditor {
+    constructor() {
+        this.isActive = false;
+        this.key = 'fineprint-deck-edits-v1';
+        this.targets = Array.from(document.querySelectorAll('.slide h1, .slide h2, .slide p, .slide li, .slide q, .slide span.val, .slide figcaption'));
+        this.restore();
+        const toggle = document.getElementById('editToggle');
+        const hotzone = document.querySelector('.edit-hotzone');
+        let hideTimeout = null;
+        toggle.addEventListener('click', () => this.toggleEditMode());
+        hotzone.addEventListener('click', () => this.toggleEditMode());
+        hotzone.addEventListener('mouseenter', () => { clearTimeout(hideTimeout); toggle.classList.add('show'); });
+        hotzone.addEventListener('mouseleave', () => { hideTimeout = setTimeout(() => { if (!this.isActive) toggle.classList.remove('show'); }, 400); });
+        toggle.addEventListener('mouseenter', () => clearTimeout(hideTimeout));
+        toggle.addEventListener('mouseleave', () => { hideTimeout = setTimeout(() => { if (!this.isActive) toggle.classList.remove('show'); }, 400); });
+        document.addEventListener('keydown', (e) => {
+            if ((e.key === 'e' || e.key === 'E') && !e.target.isContentEditable && !e.ctrlKey && !e.metaKey) this.toggleEditMode();
+            if ((e.ctrlKey || e.metaKey) && e.key === 's') { e.preventDefault(); this.download(); }
+            if (e.key === 'Escape' && this.isActive) this.toggleEditMode();
+        });
+        document.addEventListener('input', () => this.save());
+    }
+    toggleEditMode() {
+        this.isActive = !this.isActive;
+        document.body.classList.toggle('editing', this.isActive);
+        const toggle = document.getElementById('editToggle');
+        toggle.classList.toggle('active', this.isActive);
+        toggle.textContent = this.isActive ? 'Editing · Esc to stop' : 'Edit';
+        this.targets.forEach((el) => { el.contentEditable = this.isActive ? 'true' : 'false'; });
+        if (!this.isActive) this.save();
+    }
+    save() {
+        try { localStorage.setItem(this.key, JSON.stringify(this.targets.map((el) => el.innerHTML))); } catch { /* storage blocked */ }
+    }
+    restore() {
+        try {
+            const saved = JSON.parse(localStorage.getItem(this.key) || 'null');
+            if (Array.isArray(saved) && saved.length === this.targets.length) saved.forEach((html, i) => { this.targets[i].innerHTML = html; });
+        } catch { /* nothing saved */ }
+    }
+    download() {
+        const was = this.isActive;
+        if (was) this.toggleEditMode();
+        const html = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([html], { type: 'text/html' }));
+        a.download = 'fineprint-deck.html';
+        a.click();
+        setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+    }
+}
+
+if (navigator.webdriver) document.body.classList.add('export');
+// Exposed for tools such as the PDF exporter: window.presentation.goToSlide(index)
+window.presentation = new SlidePresentation();
+window.presentation.goToSlide = (i) => window.presentation.show(i);
+new InlineEditor();
+</script>
+</body>
+</html>
