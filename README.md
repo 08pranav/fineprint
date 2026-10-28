@@ -1,4 +1,4 @@
-# FinePrint
+# FinePrint: Risk Detection in Indian Financial Documents
 
 FinePrint reads an Indian loan, credit card, pay-later or insurance document and shows, in plain words and in rupees, which clauses can cost you money.
 
