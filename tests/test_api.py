@@ -2,7 +2,7 @@ from fastapi.testclient import TestClient
 
 from fineprint.api import app
 
-from conftest import sample
+from conftest import SAMPLES, sample
 
 client = TestClient(app)
 DOC = sample("s01_personal_loan.txt")
@@ -45,6 +45,37 @@ def test_extract_rejects_short_text_and_bad_files():
 def test_extract_reads_text_file_upload():
     r = client.post("/api/extract", files={"file": ("terms.txt", DOC.encode(), "text/plain")})
     assert r.status_code == 200 and r.json()["clause_count"] > 10
+
+
+def _pdf(user_password=None):
+    """The s01 sample as a real text PDF, optionally AES-encrypted the way bank PDFs often are."""
+    import io
+
+    from pypdf import PdfReader, PdfWriter
+
+    data = (SAMPLES / "pdf" / "s01_personal_loan.pdf").read_bytes()
+    if user_password is None:
+        return data
+    w = PdfWriter(clone_from=PdfReader(io.BytesIO(data)))
+    w.encrypt(user_password=user_password, owner_password="owner", algorithm="AES-256")
+    out = io.BytesIO()
+    w.write(out)
+    return out.getvalue()
+
+
+def test_extract_reads_pdf_upload():
+    r = client.post("/api/extract", files={"file": ("s01.pdf", _pdf(), "application/pdf")})
+    assert r.status_code == 200 and r.json()["clause_count"] > 10 and "[PAN]" in r.json()["text"]
+
+
+def test_extract_reads_aes_encrypted_pdf_with_empty_password():
+    r = client.post("/api/extract", files={"file": ("s01.pdf", _pdf(""), "application/pdf")})
+    assert r.status_code == 200 and r.json()["clause_count"] > 10
+
+
+def test_extract_explains_password_protected_pdf():
+    r = client.post("/api/extract", files={"file": ("s01.pdf", _pdf("secret"), "application/pdf")})
+    assert r.status_code == 400 and "password-protected" in r.json()["detail"]
 
 
 def test_analyze_recalculate_explain_ask_flow():

@@ -31,10 +31,14 @@ def load_pdf(data: bytes) -> str:
     except Exception as exc:
         raise LoadError("This file could not be opened as a PDF. Try exporting it again, or paste the text.") from exc
     if reader.is_encrypted:
+        # Bank PDFs are often AES-encrypted with an empty password just to block editing.
+        # decrypt() reports a wrong password by returning 0, not by raising.
         try:
-            reader.decrypt("")
+            opened = reader.decrypt("")
         except Exception as exc:
-            raise LoadError("This PDF is password-protected. Remove the password, or paste the text instead.") from exc
+            raise LoadError("This PDF's encryption could not be read. Paste the text instead.") from exc
+        if not opened:
+            raise LoadError("This PDF is password-protected. Remove the password, or paste the text instead.")
     pages = []
     for page in reader.pages:
         try:
