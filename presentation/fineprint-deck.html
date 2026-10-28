@@ -256,6 +256,9 @@ svg {
 .cover .card q { font-size: 26px; line-height: 1.4; quotes: none; font-weight: 500; }
 .cover .stats { display: flex; gap: 64px; font-family: var(--mono); font-size: 20px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cream-muted); border-top: 1px solid var(--border); padding-top: 22px; margin-top: 48px; }
 .cover .stats b { color: var(--cream); font-weight: 500; }
+.cover .stats { justify-content: space-between; align-items: baseline; }
+.cover .stats .grp { display: flex; gap: 64px; }
+.cover .stats .team b { color: var(--fire); }
 
 /* === SLIDE 2 · PROBLEM =============================================================== */
 .problem .cols { display: grid; grid-template-columns: 1fr 1fr; gap: 96px; margin-top: var(--gap-lg); flex: 1; }
@@ -357,7 +360,10 @@ svg {
 
 /* === SLIDE 15 · END ================================================================= */
 .end .wrap { position: absolute; inset: 0 var(--pad-x); display: flex; flex-direction: column; justify-content: center; }
-.end .meta { display: flex; gap: 64px; margin-top: 72px; font-family: var(--mono); font-size: 22px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--on-orange-muted); border-top: 1px solid var(--on-orange-border); padding-top: 22px; }
+.end .team { display: flex; gap: 96px; margin-top: 96px; }
+.end .team p { font-size: 48px; font-weight: 800; letter-spacing: -0.02em; line-height: 1.1; }
+.end .team span { display: block; font-family: var(--mono); font-size: 22px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--on-orange-muted); margin-top: 10px; }
+.end .meta { display: flex; gap: 64px; margin-top: 56px; font-family: var(--mono); font-size: 22px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--on-orange-muted); border-top: 1px solid var(--on-orange-border); padding-top: 22px; }
 
 /* ===========================================
    PRESENTER CHROME (outside the stage): progress bar and counter
@@ -405,7 +411,7 @@ body.export .edit-toggle, body.export .edit-hotzone, body.export .progress, body
         <q>“…subject to a minimum of ₹5,000, will be deducted from the disbursal amount and is non-refundable.”</q>
       </div>
     </div>
-    <p class="stats reveal" data-d="5"><span><b>14</b> risk types</span><span><b>4</b> languages</span><span><b>0.84</b> F1 on held-out documents</span></p>
+    <p class="stats reveal" data-d="5"><span class="grp team"><span><b>Anjali Rawat</b> · Roll no. 10632</span><span><b>Pranav Koradiya</b> · Roll no. 10610</span></span><span class="grp"><span><b>14</b> risk types</span><span><b>4</b> languages</span><span><b>0.84</b> F1 held-out</span></span></p>
   </div>
 </section>
 
@@ -759,6 +765,7 @@ body.export .edit-toggle, body.export .edit-hotzone, body.export .progress, body
   <p class="catalogue">15</p>
   <div class="wrap">
     <h2 class="display reveal" data-d="1">read it before you sign.</h2>
+    <div class="team reveal" data-d="2"><p>Anjali Rawat<span>Roll no. 10632</span></p><p>Pranav Koradiya<span>Roll no. 10610</span></p></div>
     <div class="meta reveal" data-d="3"><span>FinePrint: Risk Detection in Indian Financial Documents</span><span>github.com/08pranav/fineprint</span><span>FinePrint explains documents. It is not financial advice.</span></div>
   </div>
 </section>
