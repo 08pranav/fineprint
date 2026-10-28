@@ -66,6 +66,17 @@ def sample(sample_id: str):
     raise HTTPException(404, "That sample does not exist.")
 
 
+@app.get("/api/samples/{sample_id}/pdf")
+def sample_pdf(sample_id: str):
+    """The same sample as a text PDF, so the upload path can be tried with a known document."""
+    for s in _samples_index():
+        if s["id"] == sample_id:
+            path = settings.samples_dir / "pdf" / s["file"].replace(".txt", ".pdf")
+            if path.exists():
+                return FileResponse(path, media_type="application/pdf", filename=path.name)
+    raise HTTPException(404, "That sample has no PDF.")
+
+
 @app.post("/api/extract")
 async def extract(request: Request, file: UploadFile | None = File(default=None), text: str | None = Form(default=None)):
     """Step 1: read the upload or pasted text, mask personal data, count clauses, pre-fill numbers."""

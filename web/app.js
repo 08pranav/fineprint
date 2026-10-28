@@ -194,11 +194,15 @@
     try {
       state.samples = await api("/api/samples");
       list.innerHTML = state.samples.map((s) => `
-        <label class="sample">
-          <input type="radio" name="sample" value="${esc(s.id)}">
-          <span class="sample-title">${esc(s.title)}</span>
-          <span class="sample-desc">${esc(s.description)}</span>
-        </label>`).join("");
+        <div class="sample">
+          <label class="sample-pick">
+            <input type="radio" name="sample" value="${esc(s.id)}">
+            <span class="sample-title">${esc(s.title)}</span>
+            <span class="sample-desc">${esc(s.description)}</span>
+          </label>
+          <a class="sample-pdf" href="/api/samples/${encodeURIComponent(s.id)}/pdf" download
+            aria-label="Download ${esc(s.title)} as a PDF">${icon("i-download", "icon icon-xs")}PDF</a>
+        </div>`).join("");
       $$('input[name="sample"]', list).forEach((r) => r.addEventListener("change", () => {
         state.sampleId = r.value;
         setError("#sample-error", null);
@@ -312,11 +316,35 @@
       `checked by ${METHOD_LABEL[a.method]}`,
     ].join(" · ");
     renderWarnings(a.warnings);
+    renderMap();
     renderFilters();
     renderFlags();
     renderClauses();
     renderNumbers();
     applyLanguageAvailability();
+  }
+
+  // Every clause in reading order, as wide as its text; a flagged clause takes its highest severity.
+  function renderMap() {
+    const a = state.analysis;
+    const rank = { high: 3, medium: 2, low: 1 };
+    const worst = {};
+    a.flags.forEach((f) => { if (!worst[f.clause_id] || rank[f.severity] > rank[worst[f.clause_id]]) worst[f.clause_id] = f.severity; });
+    $("#risk-map").hidden = !a.flags.length;
+    if (!a.flags.length) return;
+    $("#risk-map-strip").innerHTML = a.clauses.map((c) => {
+      const sev = worst[c.id];
+      const tip = `${clauseName(c)}${sev ? `: ${SEVERITY[sev].label.toLowerCase()}` : ""}`;
+      return `<span class="seg-c${sev ? ` sev-${sev}` : ""}" style="flex-grow:${Math.max(1, c.text.length)}" title="${esc(tip)}"></span>`;
+    }).join("");
+    const counts = { high: 0, medium: 0, low: 0 };
+    Object.values(worst).forEach((s) => { counts[s] += 1; });
+    $("#risk-map-legend").innerHTML = ["high", "medium", "low"].filter((s) => counts[s]).map((s) =>
+      `<span><i class="key sev-${s}" aria-hidden="true"></i>${esc(SEVERITY[s].label)} <b>${plural(counts[s], "clause", "clauses")}</b></span>`).join("") +
+      `<span><i class="key" style="height:4px;background:var(--active)" aria-hidden="true"></i>Nothing found <b>${plural(a.clauses.length - Object.keys(worst).length, "clause", "clauses")}</b></span>`;
+    const where = (s) => a.clauses.filter((c) => worst[c.id] === s).map((c) => clauseName(c).replace("Clause ", "")).join(", ");
+    $("#risk-map-text").textContent = ["high", "medium", "low"].filter((s) => counts[s])
+      .map((s) => `${SEVERITY[s].label} in ${counts[s] === 1 ? "clause" : "clauses"} ${where(s)}.`).join(" ");
   }
 
   function renderWarnings(list) {
@@ -750,6 +778,8 @@
     try {
       state.health = await api("/api/health", { timeout: 15000 });
       $("#mode").textContent = state.health.mode === "hybrid" ? "Rules + language model" : "Rules only (no language model)";
+      $("#mode").classList.toggle("on", state.health.mode === "hybrid");
+      if (matchMedia("(max-width: 600px)").matches) $("#mode").textContent = state.health.mode === "hybrid" ? "Rules + model" : "Rules only";
       $("#mode").title = state.health.model ? `Model: ${state.health.model}` : "Set LLM_API_KEY and LLM_MODEL on the server to enable the language model.";
     } catch {
       $("#mode").textContent = "Server not reachable";

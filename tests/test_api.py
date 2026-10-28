@@ -68,6 +68,14 @@ def test_extract_reads_pdf_upload():
     assert r.status_code == 200 and r.json()["clause_count"] > 10 and "[PAN]" in r.json()["text"]
 
 
+def test_sample_pdf_is_served_and_reads_back():
+    r = client.get("/api/samples/s01/pdf")
+    assert r.status_code == 200 and r.headers["content-type"] == "application/pdf"
+    back = client.post("/api/extract", files={"file": ("s01.pdf", r.content, "application/pdf")})
+    assert back.status_code == 200 and back.json()["clause_count"] > 10
+    assert client.get("/api/samples/nope/pdf").status_code == 404
+
+
 def test_extract_reads_aes_encrypted_pdf_with_empty_password():
     r = client.post("/api/extract", files={"file": ("s01.pdf", _pdf(""), "application/pdf")})
     assert r.status_code == 200 and r.json()["clause_count"] > 10
