@@ -51,6 +51,7 @@ Current rules-only results on the 12 sample documents (64 gold labels): F1 1.00 
 ## Deploy
 
 - **Render:** New > Blueprint > pick this repo. `render.yaml` builds the Dockerfile; add `LLM_*` values as secrets.
+- **Vercel:** import the repo and keep the defaults. Vercel finds the app through the root `app.py` and installs the dependencies listed in `pyproject.toml`; add `LLM_*` values under Environment Variables.
 - **Any Docker host** (Railway, Fly.io, Hugging Face Spaces, a VM): build the Dockerfile; the app listens on `$PORT` (default 8000).
 
 CI (`.github/workflows/ci.yml`) runs the tests and the evaluation and builds and smoke-tests the image on every push.

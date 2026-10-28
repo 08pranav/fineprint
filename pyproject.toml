@@ -3,6 +3,16 @@ name = "fineprint"
 version = "1.0.0"
 description = "Reads the fine print in Indian loan, credit card, EMI and insurance documents and shows the risks in rupees."
 requires-python = ">=3.11"
+# Keep in step with requirements.txt (Docker and CI install from that; Vercel reads this list).
+dependencies = [
+    "fastapi>=0.110,<1",
+    "uvicorn[standard]>=0.29",
+    "pydantic>=2.6,<3",
+    "python-multipart>=0.0.9",
+    "pypdf>=4.0",
+    "openai>=1.30",
+    "python-dotenv>=1.0",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
